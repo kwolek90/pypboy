@@ -54,7 +54,7 @@ class BaseModule(game.EntityGroup):
 			self.footer.select(self.footer.menu[module])
 			self.add(self.active)
 		else:
-			print "No submodule at %d" % module
+			print("No submodule at %d" % module)
 
 	def render(self, interval):
 		self.active.render(interval)

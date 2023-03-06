@@ -1,7 +1,7 @@
 import pygame
 
-WIDTH = 320
-HEIGHT = 240
+WIDTH = 480
+HEIGHT = 320
 
 # OUTPUT_WIDTH = 320
 # OUTPUT_HEIGHT = 240

@@ -1,3 +1,3 @@
-from core import Entity
-from core import EntityGroup
-from core import Engine
+from game.core import Entity
+from game.core import EntityGroup
+from game.core import Engine

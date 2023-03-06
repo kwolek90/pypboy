@@ -57,12 +57,12 @@ class Maps(object):
 						bounds[2],
 						bounds[3]
 				)
-		print "[Fetching maps... (%f, %f) to (%f, %f)]" % (
+		print("[Fetching maps... (%f, %f) to (%f, %f)]" % (
 						bounds[0],
 						bounds[1],
 						bounds[2],
 						bounds[3]
-				)
+				))
 		while True:
 			try:
 				response = requests.get(url)
@@ -88,7 +88,7 @@ class Maps(object):
 							#	   for t2 in node['tag']:
 							#			   if t2["@k"] == "addr:street":
 							#					   self.tags.append((float(node['@lat']), float(node['@lon']),tag["@v"]+" "+t2["@v"]))
-						except Exception, e:
+						except Exception as e:
 							pass
 
 			for way in osm_dict['osm']['way']:
@@ -97,8 +97,8 @@ class Maps(object):
 					node = self.nodes[node_id['@ref']]
 					waypoints.append((float(node['@lat']), float(node['@lon'])))
 				self.ways.append(waypoints)
-		except Exception, e:
-			print e
+		except Exception as e:
+			print(e)
 			#print response.text
 
 	def fetch_by_coordinate(self, coords, range):

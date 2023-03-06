@@ -1,17 +1,12 @@
 # encoding=utf-8
 
 import game
-import os
 import pygame
 import traceback
-import numpy 
-from numpy.fft import fft 
-from math import log10 
+import numpy
 import math
 from random import randint
 import copy
-import game.globals as globals
-+import mutagen.oggvorbis
 
 
 class Radio(game.Entity):
@@ -35,11 +30,10 @@ class Radio(game.Entity):
 		self.filename = ""
 	
 	def play_rnd(self):
-		files = load_files()
-		file = files[randint(0,len(files)-1)]
-		self.filename = file
-		pygame.mixer.music.load(file)
-		self.spectrum = LogSpectrum(file,force_mono=True) 
+		# file = files[randint(0,len(files)-1)]
+		# self.filename = file
+		# pygame.mixer.music.load(file)
+		# self.spectrum = LogSpectrum(file,force_mono=True)
 		pygame.mixer.music.play()
 		self.loaded = True
 		self.paused = False
@@ -70,28 +64,28 @@ class Radio(game.Entity):
 		if self.osc:
 			self.blit(self.osc.screen, (550, 150))
             
-            metadata = mutagen.File(filename, easy = True)
+            # metadata = mutagen.File(filename, easy = True)
 			
 		selectFont = pygame.font.Font('monofonto.ttf', 24)
 		basicFont = pygame.font.Font('monofonto.ttf', 22)
         
-        text = selectFont.render(game.Entity.name, True, (105, 251, 187), (0, 0, 0))
+        # text = selectFont.render(game.Entity.name, True, (105, 251, 187), (0, 0, 0))
         
 		#text = selectFont.render(" -   Random Play Radio ", True, (105, 251, 187), (0, 0, 0))
 		
-        self.blit(text, (75, 75))
-		text = basicFont.render("  'r' selects a random song ", True, (105, 251, 187), (0, 0, 0))
-		self.blit(text, (75, 100))
-		text = basicFont.render("  'p' to play   's' to stop ", True, (105, 251, 187), (0, 0, 0))
-		self.blit(text, (75, 120))
+        # self.blit(text, (75, 75))
+		# text = basicFont.render("  'r' selects a random song ", True, (105, 251, 187), (0, 0, 0))
+		# self.blit(text, (75, 100))
+		# text = basicFont.render("  'p' to play   's' to stop ", True, (105, 251, 187), (0, 0, 0))
+		# self.blit(text, (75, 120))
 		
-		if self.filename:
-            text = selectFont.render(" %s " % metadata["ARTIST"] + ' - ' + metadata["TITLE"], True, (105, 251, 187), (0, 0, 0))
-            
-			#text = selectFont.render(u" %s " % self.filename[self.filename.rfind(os.sep)+1:], True, (105, 251, 187), (0, 0, 0))
-			self.blit(text, (75, 200))
-			
-		super(Radio, self).update(*args, **kwargs)
+		# if self.filename:
+        #     text = selectFont.render(" %s " % metadata["ARTIST"] + ' - ' + metadata["TITLE"], True, (105, 251, 187), (0, 0, 0))
+        #
+		# 	#text = selectFont.render(u" %s " % self.filename[self.filename.rfind(os.sep)+1:], True, (105, 251, 187), (0, 0, 0))
+		# 	self.blit(text, (75, 200))
+		#
+		# super(Radio, self).update(*args, **kwargs)
 
 class Oscilloscope:
 	
@@ -163,8 +157,8 @@ class Oscilloscope:
 			pygame.surfarray.blit_array(self.screen, pixels)	 # Blit the screen buffer
 			if not self.embedded:
 				pygame.display.flip()  
-		except Exception,e:
-			print traceback.format_exc()
+		except:
+			print(traceback.format_exc())
 
 def play_pygame(file):
 	
@@ -180,7 +174,6 @@ def play_pygame(file):
 		clock.tick(50)
 	
 	pygame.mixer.music.load(file)
-	s = LogSpectrum(file,force_mono=True) 
 	osc = Oscilloscope() 
 	osc.open()
 	
@@ -193,10 +186,10 @@ def play_pygame(file):
 	while pygame.mixer.music.get_busy() and running : 
 		if not paused:
 			start = pygame.mixer.music.get_pos() / 1000.0
-			try:
-				f,p = s.get_mono(start-0.001, start+0.001)
-			except:
-				pass
+			# try:
+			# 	f,p = s.get_mono(start-0.001, start+0.001)
+			# except:
+			# 	pass
 			osc.update(start*50,f,p)			 
 		pygame.time.wait(50)
 		
@@ -213,9 +206,10 @@ def play_pygame(file):
 	pygame.mixer.quit()
 			
 if __name__ == "__main__":
-	try:
-		files = load_files()
-		if files:
-			play_pygame(files[randint(0,len(files)-1)])
-	except Exception, e:
-		print traceback.format_exc()
+	# try:
+		# files = load_files()
+		# if files:
+		# 	play_pygame(files[randint(0,len(files)-1)])
+	# except Exception as e:
+	# 	print(traceback.format_exc())
+	pass

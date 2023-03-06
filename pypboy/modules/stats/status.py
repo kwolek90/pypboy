@@ -26,13 +26,13 @@ class Module(pypboy.SubModule):
 		super(Module, self).handle_resume()
 
 	def show_cnd(self):
-		print "CND"
+		print("CND")
 
 	def show_rad(self):
-		print "RAD"
+		print("RAD")
 
 	def show_eff(self):
-		print "EFF"
+		print("EFF")
 
 
 class Health(game.Entity):

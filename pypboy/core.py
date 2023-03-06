@@ -47,7 +47,7 @@ class Pypboy(game.core.Engine):
 
 	def init_gpio_controls(self):
 		for pin in config.GPIO_ACTIONS.keys():
-			print "Intialising pin %s as action '%s'" % (pin, config.GPIO_ACTIONS[pin])
+			print("Intialising pin %s as action '%s'" % (pin, config.GPIO_ACTIONS[pin]))
 			GPIO.setup(pin, GPIO.IN)
 			self.gpio_actions[pin] = config.GPIO_ACTIONS[pin]
 
@@ -76,7 +76,7 @@ class Pypboy(game.core.Engine):
 			self.active.handle_action("resume")
 			self.add(self.active)
 		else:
-			print "Module '%s' not implemented." % module
+			print("Module '%s' not implemented." % module)
 
 	def handle_action(self, action):
 		if action.startswith('module_'):
