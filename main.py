@@ -5,8 +5,8 @@ import config
 import os
 
 # Init framebuffer/touchscreen environment variables
-if sys.argv[1] == "pi":
-    os.putenv('SDL_VIDEODRIVER', 'fbcon')
+if len(sys.argv) > 1 and sys.argv[1] == "pi":
+    os.putenv('SDL_VIDEODRIVER', 'x11')
     os.putenv('SDL_FBDEV'      , '/dev/fb1')
     os.putenv('SDL_MOUSEDRV'   , 'TSLIB')
     os.putenv('SDL_MOUSEDEV'   , '/dev/input/touchscreen')
