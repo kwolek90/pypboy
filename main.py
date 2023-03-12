@@ -4,8 +4,10 @@ import pygame
 import config
 import os
 
+is_raspberry = len(sys.argv) > 1 and sys.argv[1] == "pi"
+
 # Init framebuffer/touchscreen environment variables
-if len(sys.argv) > 1 and sys.argv[1] == "pi":
+if is_raspberry:
     os.putenv('SDL_VIDEODRIVER', 'directfb')
     os.putenv('SDL_FBDEV'      , '/dev/fb1')
     os.putenv('SDL_MOUSEDRV'   , 'TSLIB')
@@ -28,6 +30,6 @@ except:
     config.SOUND_ENABLED = False
 
 if __name__ == "__main__":
-    boy = Pypboy('Pip-Boy 3000', config.WIDTH, config.HEIGHT)
+    boy = Pypboy('Pip-Boy 3000', config.WIDTH, config.HEIGHT, is_raspberry)
     print("RUN")
     boy.run()
