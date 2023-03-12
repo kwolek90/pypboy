@@ -1,5 +1,5 @@
 #!/bin/sh
 
 cd /home/karol/pypboy
-sudo python main.py pi
+python main.py pi
 cd /
