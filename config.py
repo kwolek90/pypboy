@@ -1,12 +1,12 @@
 import pygame
+import os
+
 
 WIDTH = 480
 HEIGHT = 320
 
-# OUTPUT_WIDTH = 320
-# OUTPUT_HEIGHT = 240
+RADIO_DIRECTORY = os.path.expanduser("~") + "/sounds/radio/"
 
-#MAP_FOCUS = (-5.9347681, 54.5889076)
 MAP_FOCUS = (-102.3016145, 21.8841274)
 
 EVENTS = {

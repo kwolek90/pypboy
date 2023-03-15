@@ -12,8 +12,7 @@ class Module(pypboy.SubModule):
 
 	def __init__(self, *args, **kwargs):
 		super(Module, self).__init__(*args, **kwargs)
-		radioDir = "sounds/radio/"
-		self.stations = [RadioStation(radioDir + x + "/") for x in os.listdir(radioDir)]
+		self.stations = [RadioStation(config.RADIO_DIRECTORY + x + "/") for x in os.listdir(config.RADIO_DIRECTORY)]
 		for station in self.stations:
 			self.add(station)
 		self.active_station = None
