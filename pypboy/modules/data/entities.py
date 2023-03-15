@@ -1,11 +1,10 @@
-import os
 import game
 import config
 import pygame
 import threading
 import pypboy.data
 
-from random import choice
+import pypboy.maps
 
 
 class Map(game.Entity):
@@ -19,7 +18,7 @@ class Map(game.Entity):
 	_render_rect = None
 
 	def __init__(self, width, render_rect=None, *args, **kwargs):
-		self._mapper = pypboy.data.Maps()
+		self._mapper = pypboy.maps.Maps()
 		self._size = width
 		self._map_surface = pygame.Surface((width, width))
 		self._render_rect = render_rect
@@ -74,7 +73,7 @@ class MapSquare(game.Entity):
 	map_position = (0, 0)
 
 	def __init__(self, size, map_position, parent, *args, **kwargs):
-		self._mapper = pypboy.data.Maps()
+		self._mapper = pypboy.maps.Maps()
 		self._size = size
 		self.parent = parent
 		self._map_surface = pygame.Surface((size * 2, size * 2))
@@ -192,54 +191,3 @@ class MapGrid(game.Entity):
 		self.draw_tags()
 
 
-class RadioStation(game.Entity):
-
-	STATES = {
-		'stopped': 0,
-		'playing': 1,
-		'paused': 2
-	}
-
-	def __init__(self, *args, **kwargs):
-		super(RadioStation, self).__init__((10, 10), *args, **kwargs)
-		self.state = self.STATES['stopped']
-		self.files = self.load_files()
-		pygame.mixer.music.set_endevent(config.EVENTS['SONG_END'])
-
-
-	def play_random(self):
-		f = choice(self.files)
-		self.filename = f
-		pygame.mixer.music.load(f)
-		pygame.mixer.music.play()
-		self.state = self.STATES['playing']
-		
-	def play(self):
-		if self.state == self.STATES['paused']:
-			pygame.mixer.music.unpause()
-			self.state = self.STATES['playing']
-		else:
-			self.play_random()
-		
-	def pause(self):
-		self.state = self.STATES['paused']
-		pygame.mixer.music.pause()
-		
-	def stop(self):
-		self.state = self.STATES['stopped']
-		pygame.mixer.music.stop()
-
-	def load_files(self):
-		files = []
-		for f in os.listdir(self.directory):
-			if f.endswith(".mp3") or f.endswith(".ogg") or f.endswith(".wav"):
-				files.append(self.directory + f)
-		print(files)
-		return files
-
-
-class GalaxyNewsRadio(RadioStation):
-
-	def __init__(self, *args, **kwargs):
-		self.directory = 'sounds/radio/gnr/'
-		super(GalaxyNewsRadio, self).__init__(self, *args, **kwargs)

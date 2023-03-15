@@ -61,7 +61,6 @@ class EntityGroup(pygame.sprite.LayeredDirty):
 		for child in self:
 			child.rect.move(x, y)
 
-
 class Entity(pygame.sprite.DirtySprite):
 	def __init__(self, dimensions=(0, 0), layer=0, *args, **kwargs):
 		super(Entity, self).__init__(*args, **kwargs)

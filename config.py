@@ -78,6 +78,8 @@ AMENITIES = {
 	'fountain': 		MAP_ICONS['misc'],
 	'marketplace': 		MAP_ICONS['misc'],
 	'atm': 				MAP_ICONS['misc'],
+	'university': MAP_ICONS['misc'],
+	'clinic': MAP_ICONS['misc'],
 }
 
 pygame.font.init()

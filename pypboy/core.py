@@ -1,7 +1,7 @@
 import pygame
 import config
 import game
-import pypboy.ui
+import pypboy.header
 
 from pypboy.modules import data
 from pypboy.modules import items
@@ -28,12 +28,8 @@ class Pypboy(game.core.Engine):
 		self.background = pygame.image.load('images/overlay.png')
 		# border = pypboy.ui.Border()
 		# self.root_children.add(border)
-		self.header = pypboy.ui.Header()
+		self.header = pypboy.header.Header()
 		self.root_children.add(self.header)
-		scanlines = pypboy.ui.Scanlines(800, 480, 3, 1, [(0, 13, 3, 50), (6, 42, 22, 100), (0, 13, 3, 50)])
-		self.root_children.add(scanlines)
-		scanlines2 = pypboy.ui.Scanlines(800, 480, 8, 40, [(0, 10, 1, 0), (21, 62, 42, 90), (61, 122, 82, 100), (21, 62, 42, 90)] + [(0, 10, 1, 0) for x in range(50)], True)
-		self.root_children.add(scanlines2)
 
 	def init_modules(self):
 		self.modules = {

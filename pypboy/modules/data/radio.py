@@ -1,7 +1,10 @@
+import os
+
 import pypboy
 import config
 
-from pypboy.modules.data import entities
+from pypboy.modules.data.radio_station import RadioStation
+
 
 class Module(pypboy.SubModule):
 
@@ -9,9 +12,8 @@ class Module(pypboy.SubModule):
 
 	def __init__(self, *args, **kwargs):
 		super(Module, self).__init__(*args, **kwargs)
-		self.stations = [
-			entities.GalaxyNewsRadio()
-		]
+		radioDir = "sounds/radio/"
+		self.stations = [RadioStation(radioDir + x + "/") for x in os.listdir(radioDir)]
 		for station in self.stations:
 			self.add(station)
 		self.active_station = None

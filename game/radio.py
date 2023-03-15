@@ -206,10 +206,4 @@ def play_pygame(file):
 	pygame.mixer.quit()
 			
 if __name__ == "__main__":
-	# try:
-		# files = load_files()
-		# if files:
-		# 	play_pygame(files[randint(0,len(files)-1)])
-	# except Exception as e:
-	# 	print(traceback.format_exc())
 	pass

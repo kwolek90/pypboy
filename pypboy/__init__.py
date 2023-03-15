@@ -1,7 +1,7 @@
 import pygame
 import game
 import config
-import pypboy.ui
+import pypboy.footer
 
 if config.GPIO_AVAILABLE:
 	import RPi.GPIO as GPIO
@@ -21,7 +21,7 @@ class BaseModule(game.EntityGroup):
 		self.pypboy = boy
 		self.position = (0, 40)
 
-		self.footer = pypboy.ui.Footer()
+		self.footer = pypboy.footer.Footer()
 		self.footer.menu = []
 		for mod in self.submodules:
 			self.footer.menu.append(mod.label)
