@@ -54,6 +54,7 @@ class Maps(object):
 						bounds[2],
 						bounds[3]
 				)
+		print(url)
 		print("[Fetching maps... (%f, %f) to (%f, %f)]" % (
 						bounds[0],
 						bounds[1],
@@ -79,6 +80,7 @@ class Maps(object):
 								for tag2 in node['tag']:
 									if tag2["@k"] == "amenity":
 										amenity = tag2["@v"]
+								print("test")
 								self.tags.append((float(node['@lat']), float(node['@lon']), tag["@v"], amenity))
 							#Personal Addresses - Removed
 							#if tag["@k"] == "addr:housenumber":
@@ -86,7 +88,7 @@ class Maps(object):
 							#			   if t2["@k"] == "addr:street":
 							#					   self.tags.append((float(node['@lat']), float(node['@lon']),tag["@v"]+" "+t2["@v"]))
 						except Exception as e:
-							pass
+							print(e)
 
 			for way in osm_dict['osm']['way']:
 				waypoints = []

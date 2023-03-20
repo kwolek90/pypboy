@@ -7,7 +7,7 @@ HEIGHT = 320
 
 RADIO_DIRECTORY = os.path.expanduser("~") + "/sounds/radio/"
 
-MAP_FOCUS = (-102.3016145, 21.8841274)
+MAP_FOCUS = (17.28789434494558, 53.52622447868417)
 
 EVENTS = {
 	'SONG_END': pygame.USEREVENT + 1

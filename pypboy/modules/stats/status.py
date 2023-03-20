@@ -4,11 +4,11 @@ import game
 import config
 import pypboy.menu
 import time
+import os
 
 from PIL import Image, ImageSequence
 
 class Module(pypboy.SubModule):
-
 	label = "Status"
 
 	def __init__(self, *args, **kwargs):
@@ -23,8 +23,9 @@ class Module(pypboy.SubModule):
 		self.add(self.menu)
 
 	def handle_resume(self):
+		temp = os.popen("vcgencmd measure_temp").readline().replace("=", "").replace("'C\n", "°C")
 		self.parent.pypboy.header.headline = "STATUS"
-		self.parent.pypboy.header.title = " HP 160/175  |  AP 62/62"
+		self.parent.pypboy.header.title = temp
 		super(Module, self).handle_resume()
 
 	def show_cnd(self):

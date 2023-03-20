@@ -18,9 +18,20 @@ class Module(pypboy.SubModule):
 		self.active_station = None
 		config.radio = self
 
+		handlers = []
+		for x in range(len(self.stations)):
+			handlers.append(lambda x=x: self.select_station(x))
+
+		self.menu = pypboy.menu.Menu(250, [x.name for x in self.stations], handlers, 0)
+		self.menu.rect[0] = 4
+		self.menu.rect[1] = 50
+
+		self.add(self.menu)
+
 		self.select_station(0)
 
 	def select_station(self, station):
+		print(station, self.stations[station].name)
 		if hasattr(self, 'active_station') and self.active_station:
 			self.active_station.stop()
 		self.active_station = self.stations[station]

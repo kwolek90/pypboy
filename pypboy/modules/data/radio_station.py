@@ -1,10 +1,18 @@
 import os
 from random import choice
+import numpy as np
+import pyaudio
+from math import sqrt
 
 import pygame
 
 import config
 import game
+
+
+from pydub import AudioSegment
+from scipy.io import wavfile
+from tempfile import mktemp
 
 
 class RadioStation(game.Entity):
@@ -15,12 +23,25 @@ class RadioStation(game.Entity):
 		'paused': 2
 	}
 
+	# Cd quality audio is typically 44.1kHz.
+	RATE = 44100
+	# Update the screen 60 times per second
+	CHUNKS_PER_SECOND = 60
+	# The size of each chunk
+	CHUNK = int(RATE / CHUNKS_PER_SECOND)
+	# We want 16 bit samples.
+	FORMAT = pyaudio.paInt16
+
 	def __init__(self, directory, *args, **kwargs):
+		self.name = os.path.split(os.path.dirname(directory))[-1]
 		self.directory = directory
 		super(RadioStation, self).__init__((10, 10), *args, **kwargs)
 		self.state = self.STATES['stopped']
 		self.files = self.load_files()
+		self.oscilloscope_surface = pygame.Surface((config.WIDTH, config.HEIGHT))
 		pygame.mixer.music.set_endevent(config.EVENTS['SONG_END'])
+		self.stream = None
+
 
 
 	def play_random(self):
@@ -29,6 +50,10 @@ class RadioStation(game.Entity):
 		pygame.mixer.music.load(f)
 		pygame.mixer.music.play()
 		self.state = self.STATES['playing']
+
+
+	def render(self, *args, **kwargs):
+		pass
 
 	def play(self):
 		if self.state == self.STATES['paused']:
