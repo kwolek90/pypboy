@@ -23,10 +23,16 @@ class Module(pypboy.SubModule):
 		self.add(self.menu)
 
 	def handle_resume(self):
-		temp = os.popen("vcgencmd measure_temp").readline().replace("=", "").replace("'C\n", "°C")
+		temp = os.popen("vcgencmd measure_temp").readline().upper().replace("=", " ").replace("'C\n", "°C")
 		self.parent.pypboy.header.headline = "STATUS"
 		self.parent.pypboy.header.title = temp
 		super(Module, self).handle_resume()
+
+	def update(self, *args, **kwargs):
+		temp = os.popen("vcgencmd measure_temp").readline().upper().replace("=", " ").replace("'C\n", "°C")
+		self.parent.pypboy.header.headline = "STATUS"
+		self.parent.pypboy.header.title = temp
+		super(Module, self).update()
 
 	def show_cnd(self):
 		print("CND")
