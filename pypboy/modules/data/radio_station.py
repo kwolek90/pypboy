@@ -1,8 +1,6 @@
 import os
 from random import choice
-import numpy as np
 import pyaudio
-from math import sqrt
 
 import pygame
 
@@ -10,9 +8,6 @@ import config
 import game
 
 
-from pydub import AudioSegment
-from scipy.io import wavfile
-from tempfile import mktemp
 
 
 class RadioStation(game.Entity):
