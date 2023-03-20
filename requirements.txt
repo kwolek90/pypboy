@@ -4,6 +4,3 @@ xmltodict
 numpy
 Pillow
 pyaudio
-pydub
-scipy
-psutil
