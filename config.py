@@ -5,7 +5,8 @@ import os
 WIDTH = 480
 HEIGHT = 320
 
-RADIO_DIRECTORY = os.path.expanduser("~") + "/sounds/radio/"
+RADIO_DIRECTORY = os.path.expanduser("~") + "/pypboy_data/radio/"
+NOTES_DIRECTORY = os.path.expanduser("~") + "/pypboy_data/notes/"
 
 MAP_FOCUS = (17.28789434494558, 53.52622447868417)
 
@@ -84,5 +85,5 @@ AMENITIES = {
 
 pygame.font.init()
 FONTS = {}
-for x in range(10, 28):
+for x in range(8, 28):
 	FONTS[x] = pygame.font.Font('monofonto.ttf', x)

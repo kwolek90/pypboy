@@ -8,8 +8,6 @@ import config
 import game
 
 
-
-
 class RadioStation(game.Entity):
 
 	STATES = {
