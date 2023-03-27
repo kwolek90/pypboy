@@ -23,18 +23,18 @@ class Footer(game.Entity):
 		pygame.draw.line(self.image, (95, 255, 177), (5, 20), (config.WIDTH - 13, 20), 2)
 		pygame.draw.line(self.image, (95, 255, 177), (config.WIDTH - 13, 2), (config.WIDTH - 13, 20), 2)
 
-		offset = 20
+		offset = 10
 		for m in self.menu:
 			padding = 1
 			text_width = 0
-			while text_width < 54:
+			while text_width < 50:
 				spaces = " ".join([" " for x in range(padding)])
 				text = config.FONTS[12].render("%s%s%s" % (spaces, m, spaces), True, (105, 255, 187), (0, 0, 0))
 				text_width = text.get_size()[0]
 				padding += 1
-			#print(m+" : "+str(text.get_size()))
+
 			if m == self.selected:
 				pygame.draw.rect(self.image, (95, 255, 177), (offset - 2, 6, (text_width + 3), 26), 2)
 			self.image.blit(text, (offset, 12))
 
-			offset = offset + 120 + (text_width - 100)
+			offset = offset + 110 + (text_width - 100)

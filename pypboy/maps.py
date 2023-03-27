@@ -28,9 +28,6 @@ class Maps(object):
 		return value
 
 	def fetch_grid(self, coords):
-		# lat = self.float_floor_to_precision(coords[0], self.SIG_PLACES)
-		# lng = self.float_floor_to_precision(coords[1], self.SIG_PLACES)
-		# print lat, lng
 		lat = coords[0]
 		lng = coords[1]
 
@@ -82,11 +79,6 @@ class Maps(object):
 										amenity = tag2["@v"]
 								print("test")
 								self.tags.append((float(node['@lat']), float(node['@lon']), tag["@v"], amenity))
-							#Personal Addresses - Removed
-							#if tag["@k"] == "addr:housenumber":
-							#	   for t2 in node['tag']:
-							#			   if t2["@k"] == "addr:street":
-							#					   self.tags.append((float(node['@lat']), float(node['@lon']),tag["@v"]+" "+t2["@v"]))
 						except Exception as e:
 							print(e)
 
@@ -98,7 +90,6 @@ class Maps(object):
 				self.ways.append(waypoints)
 		except Exception as e:
 			print(e)
-			#print response.text
 
 	def fetch_by_coordinate(self, coords, range):
 		return self.fetch_area((

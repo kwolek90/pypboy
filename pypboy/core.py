@@ -4,8 +4,6 @@ import game
 import pypboy.header
 
 from pypboy.modules import data
-from pypboy.modules import items
-from pypboy.modules import stats
 
 if config.GPIO_AVAILABLE:
 	import RPi.GPIO as GPIO
@@ -26,20 +24,16 @@ class Pypboy(game.core.Engine):
 
 	def init_children(self):
 		self.background = pygame.image.load('images/overlay.png')
-		# border = pypboy.ui.Border()
-		# self.root_children.add(border)
 		self.header = pypboy.header.Header()
 		self.root_children.add(self.header)
 
 	def init_modules(self):
 		self.modules = {
 			"data": data.Module(self),
-			"items": items.Module(self),
-			"stats": stats.Module(self)
 		}
 		for module in self.modules.values():
 			module.move(4, 40)
-		self.switch_module("stats")
+		self.switch_module("data")
 
 	def init_gpio_controls(self):
 		for pin in config.GPIO_ACTIONS.keys():

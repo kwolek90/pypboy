@@ -7,6 +7,7 @@ HEIGHT = 320
 
 RADIO_DIRECTORY = os.path.expanduser("~") + "/pypboy_data/radio/"
 NOTES_DIRECTORY = os.path.expanduser("~") + "/pypboy_data/notes/"
+ICONS_DIRECTORY = os.path.expanduser("~") + "/pypboy_data/icons/"
 
 MAP_FOCUS = (17.28789434494558, 53.52622447868417)
 
@@ -23,6 +24,7 @@ ACTIONS = {
 	pygame.K_3: "knob_3",
 	pygame.K_4: "knob_4",
 	pygame.K_5: "knob_5",
+	pygame.K_6: "knob_6",
 	pygame.K_UP: "dial_up",
 	pygame.K_DOWN: "dial_down"
 }
@@ -37,6 +39,7 @@ GPIO_ACTIONS = {
 	7: "knob_3", #GPIO 7
 	22: "knob_4", #GPIO 22
 	23: "knob_5", #GPIO 27
+	24: "knob_6", #GPIO 27
 #	31: "dial_up", #GPIO 23
 	27: "dial_down" #GPIO 7
 }
