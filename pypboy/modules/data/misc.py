@@ -33,22 +33,7 @@ class Module(pypboy.SubModule):
 			self.selected_note.clear()
 		note = self.notes[note_idx]
 		print(note_idx, note.name)
-
-		font_size = 8
-		line_length = int((config.WIDTH-150) / (font_size / 2))
-
-		text = ""
-		line_idx = 0
-		for line in note.text.splitlines():
-			for word in line.split():
-				if len(word)+len(text) > line_length:
-					note.image.blit(config.FONTS[font_size].render(text, True, (105, 255, 187), (0, 0, 0)), (140, 50+line_idx*font_size))
-					text = ""
-					line_idx += 1
-				text += word + " "
-			note.image.blit(config.FONTS[font_size].render(text, True, (105, 255, 187), (0, 0, 0)),	(140, 50 + line_idx * font_size))
-			text = ""
-			line_idx += 1
+		note.print()
 		self.selected_note = note
 
 
@@ -64,6 +49,23 @@ class Note(game.Entity):
 
 	def update(self, *args, **kwargs):
 		pass
+
+	def print(self, *args, **kwargs):
+		font_size = 8
+		line_length = int((config.WIDTH-150) / (font_size / 2))
+
+		text = ""
+		line_idx = 0
+		for line in self.text.splitlines():
+			for word in line.split():
+				if len(word)+len(text) > line_length:
+					self.image.blit(config.FONTS[font_size].render(text, True, (105, 255, 187), (0, 0, 0)), (140, 50+line_idx*font_size))
+					text = ""
+					line_idx += 1
+				text += word + " "
+			self.image.blit(config.FONTS[font_size].render(text, True, (105, 255, 187), (0, 0, 0)),	(140, 50 + line_idx * font_size))
+			text = ""
+			line_idx += 1
 
 	def clear(self):
 		self.image.fill((0, 0, 0))
