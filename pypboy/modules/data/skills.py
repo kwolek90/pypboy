@@ -1,5 +1,4 @@
 import pypboy
-import pygame
 import game
 import config
 
@@ -30,8 +29,6 @@ class Module(pypboy.SubModule):
 
 		self.add(self.menu)
 
-		self.select_skill(0)
-
 	def select_skill(self, skill_idx):
 		if self.selected_skill:
 			self.selected_skill.clear()
@@ -39,7 +36,6 @@ class Module(pypboy.SubModule):
 		print(skill_idx, skill.name)
 		skill.print()
 		self.selected_skill = skill
-
 
 
 class Skill(game.Entity):

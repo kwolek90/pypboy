@@ -1,6 +1,7 @@
 import pygame
 import time
 
+
 class Engine(object):
 
 	EVENTS_UPDATE = pygame.USEREVENT + 1
@@ -60,6 +61,7 @@ class EntityGroup(pygame.sprite.LayeredDirty):
 	def move(self, x, y):
 		for child in self:
 			child.rect.move(x, y)
+
 
 class Entity(pygame.sprite.DirtySprite):
 	def __init__(self, dimensions=(0, 0), layer=0, *args, **kwargs):

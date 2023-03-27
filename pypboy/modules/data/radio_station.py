@@ -9,6 +9,7 @@ import game
 import librosa
 import numpy as np
 import time
+import pickle
 
 
 class RadioStation(game.Entity):
@@ -44,6 +45,7 @@ class RadioStation(game.Entity):
 		self.frequencies_index_ratio = None
 		self.time_index_ratio = None
 		self.last_render_time = 0
+		self.spectrogram = None
 
 	def play_random(self):
 		self.filename = choice(self.files)
@@ -51,35 +53,8 @@ class RadioStation(game.Entity):
 		pygame.mixer.music.play()
 		self.state = self.STATES['playing']
 
-		time_series, sample_rate = librosa.load(self.filename)  # getting information from the file
-
-		# getting a matrix which contains amplitude values according to frequency and time indexes
-		stft = np.abs(librosa.stft(time_series, hop_length=512, n_fft=2048 * 4))
-
-		self.spectrogram = librosa.amplitude_to_db(stft, ref=np.max)  # converting the matrix to decibel matrix
-
-		frequencies = librosa.core.fft_frequencies(n_fft=2048 * 4)  # getting an array of frequencies
-
-		# getting an array of time periodic
-		frames = np.arange(self.spectrogram.shape[1])
-		times = librosa.core.frames_to_time(frames, sr=sample_rate, hop_length=512, n_fft=2048 * 4)
-
-		self.time_index_ratio = len(times) / times[len(times) - 1]
-
-		self.frequencies_index_ratio = len(frequencies) / frequencies[len(frequencies) - 1]
-
-		self.bars = []
-		frequencies = np.arange(100, 8000, 200)
-		width = 6
-		x = 200
-		for c in frequencies:
-			self.bars.append(AudioBar(x, 100, c, (0, 255, 0), max_height=100, width=width))
-			x += width
-
-		self.getTicksLastFrame = pygame.time.get_ticks()
-
-	def get_decibel(self, target_time, freq):
-		return self.spectrogram[int(freq * self.frequencies_index_ratio)][int(target_time * self.time_index_ratio)]
+		self.spectrogram = Spectrogram(self.filename)
+		self.bars = self.spectrogram.bars
 
 	def render(self, *args, **kwargs):
 		if self.last_render_time == 0:
@@ -89,17 +64,11 @@ class RadioStation(game.Entity):
 			interval = time.time() - self.last_render_time
 			if interval < 0.1:
 				return
-		t = pygame.time.get_ticks()
-		delta_time = (t - self.getTicksLastFrame) / 1000.0
-		self.getTicksLastFrame = t
 
-		#pygame.draw.rect(self.image, (255, 255, 255), (200, 100, 400, 110))
 		for b in self.bars:
-			b.update(delta_time, self.get_decibel(pygame.mixer.music.get_pos() / 1000.0, b.freq))
+			b.update(self.spectrogram.get_decibel(pygame.mixer.music.get_pos() / 1000.0, b.freq))
 			b.render(self.image)
 
-		# Flip the display
-		# pygame.display.flip()
 		self.last_render_time = time.time()
 
 	def play(self):
@@ -136,6 +105,44 @@ def clamp(min_value, max_value, value):
 	return value
 
 
+class Spectrogram:
+	def __init__(self, filename):
+		dump_file = os.path.splitext(filename)[0] + ".dump"
+		if os.path.isfile(dump_file):
+			spectrogram = pickle.load(open(dump_file, "rb"))
+			self.bars = spectrogram.bars
+			self.spectrogram = spectrogram.spectrogram
+			self.time_index_ratio = spectrogram.time_index_ratio
+			self.frequencies_index_ratio = spectrogram.frequencies_index_ratio
+		else:
+			time_series, sample_rate = librosa.load(filename)  # getting information from the file
+
+			# getting a matrix which contains amplitude values according to frequency and time indexes
+			stft = np.abs(librosa.stft(time_series, hop_length=512, n_fft=2048 * 4))
+
+			self.spectrogram = librosa.amplitude_to_db(stft, ref=np.max)  # converting the matrix to decibel matrix
+
+			frequencies = librosa.core.fft_frequencies(n_fft=2048 * 4)  # getting an array of frequencies
+
+			# getting an array of time periodic
+			frames = np.arange(self.spectrogram.shape[1])
+			times = librosa.core.frames_to_time(frames, sr=sample_rate, hop_length=512, n_fft=2048 * 4)
+			self.time_index_ratio = len(times) / times[len(times) - 1]
+			self.frequencies_index_ratio = len(frequencies) / frequencies[len(frequencies) - 1]
+			self.bars = []
+			frequencies = np.arange(100, 8000, 200)
+			width = 6
+			x = 200
+			for c in frequencies:
+				self.bars.append(AudioBar(x, 100, c, (0, 255, 0), max_height=100, width=width))
+				x += width
+
+			pickle.dump(self, open(dump_file, "wb"))
+
+	def get_decibel(self, target_time, freq):
+		return self.spectrogram[int(freq * self.frequencies_index_ratio)][int(target_time * self.time_index_ratio)]
+
+
 class AudioBar:
 	def __init__(self, x, y, freq, color, width=50, min_height=10, max_height=100, min_decibel=-80, max_decibel=0):
 		self.x, self.y, self.freq = x, y, freq
@@ -145,10 +152,8 @@ class AudioBar:
 		self.min_decibel, self.max_decibel = min_decibel, max_decibel
 		self.__decibel_height_ratio = (self.max_height - self.min_height)/(self.max_decibel - self.min_decibel)
 
-	def update(self, dt, decibel):
+	def update(self, decibel):
 		desired_height = decibel * self.__decibel_height_ratio + self.max_height
-		#speed = (desired_height - self.height)/0.1
-		#self.height += speed * dt
 		self.height = clamp(self.min_height, self.max_height, desired_height)
 
 	def render(self, screen):

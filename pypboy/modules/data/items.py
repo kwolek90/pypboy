@@ -32,8 +32,6 @@ class Module(pypboy.SubModule):
 
 		self.add(self.menu)
 
-		self.select_item(0)
-
 	def select_item(self, item_idx):
 		if self.selected_item:
 			self.selected_item.clear()

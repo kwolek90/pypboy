@@ -28,8 +28,6 @@ class Module(pypboy.SubModule):
 
 		self.add(self.menu)
 
-		self.select_station(0)
-
 	def select_station(self, station):
 		print(station, self.stations[station].name)
 		if hasattr(self, 'active_station') and self.active_station:

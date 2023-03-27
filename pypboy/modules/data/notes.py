@@ -26,8 +26,6 @@ class Module(pypboy.SubModule):
 
 		self.add(self.menu)
 
-		self.select_note(0)
-
 	def select_note(self, note_idx):
 		if self.selected_note:
 			self.selected_note.clear()

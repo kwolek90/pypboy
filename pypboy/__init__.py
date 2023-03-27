@@ -74,7 +74,6 @@ class BaseModule(game.EntityGroup):
 		if hasattr(self, 'active') and self.active:
 			self.active.handle_event(event)
 
-
 	def handle_pause(self):
 		self.paused = True
 		if config.GPIO_AVAILABLE:
