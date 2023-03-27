@@ -7,7 +7,7 @@ import os
 
 class Module(pypboy.SubModule):
 
-	label = "Misc"
+	label = "Items"
 
 	def __init__(self, *args, **kwargs):
 		super(Module, self).__init__(*args, **kwargs)
@@ -42,7 +42,7 @@ class Module(pypboy.SubModule):
 
 
 class Item(game.Entity):
-	def __init__(self, name, description, amount, icon = None, *args, **kwargs):
+	def __init__(self, name, description, amount, icon=None, *args, **kwargs):
 		super(Item, self).__init__((config.WIDTH, config.HEIGHT), *args, **kwargs)
 		self.name = name
 		self.text = description
