@@ -11,7 +11,8 @@ class Menu(game.Entity):
 		self.items = items
 		self.callbacks = callbacks
 		self.selected = 0
-		self.select(selected)
+		if selected is not None:
+			self.select(selected)
 
 		if config.SOUND_ENABLED:
 			self.dial_move_sfx = pygame.mixer.Sound('sounds/dial_move.ogg')

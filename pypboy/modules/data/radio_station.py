@@ -52,6 +52,7 @@ class RadioStation(game.Entity):
 		pygame.mixer.music.load(self.filename)
 		pygame.mixer.music.play()
 		self.state = self.STATES['playing']
+		print(self.filename)
 
 		self.spectrogram = Spectrogram(self.filename)
 		self.bars = self.spectrogram.bars
@@ -70,6 +71,12 @@ class RadioStation(game.Entity):
 			b.render(self.image)
 
 		self.last_render_time = time.time()
+
+	def toogle(self):
+		if self.state == self.STATES['playing']:
+			self.pause()
+		else:
+			self.play()
 
 	def play(self):
 		if self.state == self.STATES['paused']:

@@ -16,32 +16,20 @@ EVENTS = {
 }
 
 ACTIONS = {
-	pygame.K_F1: "module_stats",
-	pygame.K_F2: "module_items",
-	pygame.K_F3: "module_data",
-	pygame.K_1:	"knob_1",
-	pygame.K_2: "knob_2",
-	pygame.K_3: "knob_3",
-	pygame.K_4: "knob_4",
-	pygame.K_5: "knob_5",
-	pygame.K_6: "knob_6",
+	pygame.K_LEFT: "dial_left",
+	pygame.K_RIGHT: "dial_right",
 	pygame.K_UP: "dial_up",
-	pygame.K_DOWN: "dial_down"
+	pygame.K_DOWN: "dial_down",
+	pygame.K_p: "pause",
 }
 
 # Using GPIO.BCM as mode
 GPIO_ACTIONS = {
-    4: "module_stats", #GPIO 4
-	14: "module_items", #GPIO 14
-	15: "module_data", #GPIO 15
-	17:	"knob_1", #GPIO 17
-	18: "knob_2", #GPIO 18
-	7: "knob_3", #GPIO 7
-	22: "knob_4", #GPIO 22
-	23: "knob_5", #GPIO 27
-	24: "knob_6", #GPIO 27
-#	31: "dial_up", #GPIO 23
-	27: "dial_down" #GPIO 7
+	23: "dial_left", #GPIO 27
+	24: "dial_right", #GPIO 27
+	31: "dial_up", #GPIO 23
+	27: "dial_down", #GPIO 7
+	29: "pause",  # GPIO 7
 }
 
 
