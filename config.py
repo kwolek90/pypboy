@@ -25,11 +25,11 @@ ACTIONS = {
 
 # Using GPIO.BCM as mode
 GPIO_ACTIONS = {
-	23: "dial_left", #GPIO 27
-	24: "dial_right", #GPIO 27
+	5: "dial_left", #GPIO 27
+	6: "dial_right", #GPIO 27
 	31: "dial_up", #GPIO 23
 	27: "dial_down", #GPIO 7
-	29: "pause",  # GPIO 7
+	26: "pause",  # GPIO 7
 }
 
 
