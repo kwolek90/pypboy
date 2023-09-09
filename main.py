@@ -8,7 +8,7 @@ is_raspberry = len(sys.argv) > 1 and sys.argv[1] == "pi"
 
 # Init framebuffer/touchscreen environment variables
 if is_raspberry:
-    os.putenv('SDL_VIDEODRIVER', 'kmsdrm')
+    os.putenv('SDL_VIDEODRIVER', 'x11')
     os.putenv('SDL_FBDEV'      , '/dev/fb1')
     os.putenv('SDL_MOUSEDRV'   , 'TSLIB')
     os.putenv('SDL_MOUSEDEV'   , '/dev/input/touchscreen')
