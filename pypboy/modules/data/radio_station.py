@@ -87,6 +87,11 @@ class RadioStation(game.Entity):
 			if f.endswith(".mp3") or f.endswith(".ogg") or f.endswith(".wav"):
 				files.append(self.directory + f)
 		print(files)
+		if not config.GPIO_ACTIONS:
+			for filename in files:
+				if not os.path.isfile(os.path.splitext(filename)[0] + ".dump"):
+					print(filename)
+					Spectrogram(filename, True)
 		return files
 
 
