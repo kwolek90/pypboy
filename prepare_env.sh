@@ -7,7 +7,7 @@ git clone https://github.com/kwolek90/pypboy.git
 pip install xmltodict requests
 mkdir -p ~/.config/lxsession/LXDE-pi
 cp /etc/xdg/lxsession/LXDE-pi/autostart ~/.config/lxsession/LXDE-pi
-echo "@python3 `pwd`/pypboy/main.py pi" >> ~/.config/lxsession/LXDE-pi/autostart
+echo "@bash `pwd`/pypboy/launcher.sh" >> ~/.config/lxsession/LXDE-pi/autostart
 cd LCD-show
 sudo chmod +x LCD35-show
 sudo ./LCD35-show
