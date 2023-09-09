@@ -6,7 +6,6 @@ import pygame
 
 import config
 import game
-import librosa
 import numpy as np
 import time
 import pickle
@@ -122,27 +121,27 @@ class Spectrogram:
 			self.time_index_ratio = spectrogram.time_index_ratio
 			self.frequencies_index_ratio = spectrogram.frequencies_index_ratio
 		else:
-			time_series, sample_rate = librosa.load(filename)  # getting information from the file
-
-			# getting a matrix which contains amplitude values according to frequency and time indexes
-			stft = np.abs(librosa.stft(time_series, hop_length=512, n_fft=2048 * 4))
-
-			self.spectrogram = librosa.amplitude_to_db(stft, ref=np.max)  # converting the matrix to decibel matrix
-
-			frequencies = librosa.core.fft_frequencies(n_fft=2048 * 4)  # getting an array of frequencies
-
-			# getting an array of time periodic
-			frames = np.arange(self.spectrogram.shape[1])
-			times = librosa.core.frames_to_time(frames, sr=sample_rate, hop_length=512, n_fft=2048 * 4)
-			self.time_index_ratio = len(times) / times[len(times) - 1]
-			self.frequencies_index_ratio = len(frequencies) / frequencies[len(frequencies) - 1]
-			self.bars = []
-			frequencies = np.arange(100, 8000, 200)
-			width = 6
-			x = 200
-			for c in frequencies:
-				self.bars.append(AudioBar(x, 100, c, (0, 255, 0), max_height=100, width=width))
-				x += width
+			# time_series, sample_rate = librosa.load(filename)  # getting information from the file
+			#
+			# # getting a matrix which contains amplitude values according to frequency and time indexes
+			# stft = np.abs(librosa.stft(time_series, hop_length=512, n_fft=2048 * 4))
+			#
+			# self.spectrogram = librosa.amplitude_to_db(stft, ref=np.max)  # converting the matrix to decibel matrix
+			#
+			# frequencies = librosa.core.fft_frequencies(n_fft=2048 * 4)  # getting an array of frequencies
+			#
+			# # getting an array of time periodic
+			# frames = np.arange(self.spectrogram.shape[1])
+			# times = librosa.core.frames_to_time(frames, sr=sample_rate, hop_length=512, n_fft=2048 * 4)
+			# self.time_index_ratio = len(times) / times[len(times) - 1]
+			# self.frequencies_index_ratio = len(frequencies) / frequencies[len(frequencies) - 1]
+			# self.bars = []
+			# frequencies = np.arange(100, 8000, 200)
+			# width = 6
+			# x = 200
+			# for c in frequencies:
+			# 	self.bars.append(AudioBar(x, 100, c, (0, 255, 0), max_height=100, width=width))
+			# 	x += width
 
 			pickle.dump(self, open(dump_file, "wb"))
 
