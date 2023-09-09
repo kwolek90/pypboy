@@ -3,4 +3,3 @@ requests
 xmltodict
 numpy
 Pillow
-pyaudio

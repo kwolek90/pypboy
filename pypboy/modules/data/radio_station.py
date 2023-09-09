@@ -1,12 +1,10 @@
 import os
 from random import choice
-import pyaudio
 
 import pygame
 
 import config
 import game
-import numpy as np
 import time
 import pickle
 
@@ -18,15 +16,6 @@ class RadioStation(game.Entity):
 		'playing': 1,
 		'paused': 2
 	}
-
-	# Cd quality audio is typically 44.1kHz.
-	RATE = 44100
-	# Update the screen 60 times per second
-	CHUNKS_PER_SECOND = 60
-	# The size of each chunk
-	CHUNK = int(RATE / CHUNKS_PER_SECOND)
-	# We want 16 bit samples.
-	FORMAT = pyaudio.paInt16
 
 	def __init__(self, directory, *args, **kwargs):
 		self.name = os.path.split(os.path.dirname(directory))[-1]
@@ -112,38 +101,42 @@ def clamp(min_value, max_value, value):
 
 
 class Spectrogram:
-	def __init__(self, filename):
+	def __init__(self, filename, prepare=False):
 		dump_file = os.path.splitext(filename)[0] + ".dump"
-		if os.path.isfile(dump_file):
-			spectrogram = pickle.load(open(dump_file, "rb"))
-			self.bars = spectrogram.bars
-			self.spectrogram = spectrogram.spectrogram
-			self.time_index_ratio = spectrogram.time_index_ratio
-			self.frequencies_index_ratio = spectrogram.frequencies_index_ratio
-		else:
-			# time_series, sample_rate = librosa.load(filename)  # getting information from the file
-			#
-			# # getting a matrix which contains amplitude values according to frequency and time indexes
-			# stft = np.abs(librosa.stft(time_series, hop_length=512, n_fft=2048 * 4))
-			#
-			# self.spectrogram = librosa.amplitude_to_db(stft, ref=np.max)  # converting the matrix to decibel matrix
-			#
-			# frequencies = librosa.core.fft_frequencies(n_fft=2048 * 4)  # getting an array of frequencies
-			#
-			# # getting an array of time periodic
-			# frames = np.arange(self.spectrogram.shape[1])
-			# times = librosa.core.frames_to_time(frames, sr=sample_rate, hop_length=512, n_fft=2048 * 4)
-			# self.time_index_ratio = len(times) / times[len(times) - 1]
-			# self.frequencies_index_ratio = len(frequencies) / frequencies[len(frequencies) - 1]
-			# self.bars = []
-			# frequencies = np.arange(100, 8000, 200)
-			# width = 6
-			# x = 200
-			# for c in frequencies:
-			# 	self.bars.append(AudioBar(x, 100, c, (0, 255, 0), max_height=100, width=width))
-			# 	x += width
+		if prepare:
+			self.prepare_dumpfile(filename, dump_file)
+		spectrogram = pickle.load(open(dump_file, "rb"))
+		self.bars = spectrogram.bars
+		self.spectrogram = spectrogram.spectrogram
+		self.time_index_ratio = spectrogram.time_index_ratio
+		self.frequencies_index_ratio = spectrogram.frequencies_index_ratio
 
-			pickle.dump(self, open(dump_file, "wb"))
+	def prepare_dumpfile(self, filename, dump_file):
+		import librosa
+		import numpy as np
+		time_series, sample_rate = librosa.load(filename)  # getting information from the file
+
+		# getting a matrix which contains amplitude values according to frequency and time indexes
+		stft = np.abs(librosa.stft(time_series, hop_length=512, n_fft=2048 * 4))
+
+		self.spectrogram = librosa.amplitude_to_db(stft, ref=np.max)  # converting the matrix to decibel matrix
+
+		frequencies = librosa.core.fft_frequencies(n_fft=2048 * 4)  # getting an array of frequencies
+
+		# getting an array of time periodic
+		frames = np.arange(self.spectrogram.shape[1])
+		times = librosa.core.frames_to_time(frames, sr=sample_rate, hop_length=512, n_fft=2048 * 4)
+		self.time_index_ratio = len(times) / times[len(times) - 1]
+		self.frequencies_index_ratio = len(frequencies) / frequencies[len(frequencies) - 1]
+		self.bars = []
+		frequencies = np.arange(100, 8000, 200)
+		width = 6
+		x = 200
+		for c in frequencies:
+			self.bars.append(AudioBar(x, 100, c, (0, 255, 0), max_height=100, width=width))
+			x += width
+
+		pickle.dump(self, open(dump_file, "wb"))
 
 	def get_decibel(self, target_time, freq):
 		return self.spectrogram[int(freq * self.frequencies_index_ratio)][int(target_time * self.time_index_ratio)]
