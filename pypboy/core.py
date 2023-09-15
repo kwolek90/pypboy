@@ -2,6 +2,7 @@ import pygame
 import config
 import game
 import pypboy.header
+import time
 
 from pypboy.modules import data
 
@@ -44,6 +45,7 @@ class Pypboy(game.core.Engine):
 		super(Pypboy, self).__init__(*args, **kwargs)
 		self.init_children()
 		self.init_modules()
+		self.last_pause_click = time.time_ns()
 
 		self.gpio_actions = {}
 		if config.GPIO_AVAILABLE:
@@ -70,8 +72,9 @@ class Pypboy(game.core.Engine):
 		self.gpio_actions[26] = "pause"
 
 	def check_gpio_input(self):
-		if not GPIO.input(26):
+		if time.time_ns() - self.last_pause_click > 500000000 and not GPIO.input(26):
 			self.handle_action("pause")
+			self.last_pause_click = time.time_ns()
 			print("pause")
 		self.dial_vert.handle(self)
 		self.dial_hor.handle(self)
