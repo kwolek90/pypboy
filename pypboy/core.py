@@ -12,29 +12,40 @@ if config.GPIO_AVAILABLE:
 
 
 class Dial:
-	def __init__(self, clk, dt, left_action, right_action):
-		self.clk = clk
-		self.dt = dt
+	def __init__(self, clk, dt, left_action, right_action, pipboy):
+		self.Enc_A = clk
+		self.Enc_B = dt
 		self.left_action = left_action
 		self.right_action = right_action
+		self.pipboy = pipboy
 
 		GPIO.setmode(GPIO.BCM)
-		GPIO.setup(self.clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-		GPIO.setup(self.dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
-		self.clkLastState = GPIO.input(self.clk)
+		GPIO.setmode(GPIO.BCM)
+		GPIO.setup(self.Enc_A, GPIO.IN)
+		GPIO.setup(self.Enc_B, GPIO.IN)
+		GPIO.add_event_detect(self.Enc_A, GPIO.RISING, callback=self.rotation_decode, bouncetime=10)
 
-	def handle(self, pipboy):
-		clkState = GPIO.input(self.clk)
-		dtState = GPIO.input(self.dt)
-		if clkState != self.clkLastState:
-			if dtState != clkState:
-				pipboy.handle_action(self.left_action)
-				print(self.left_action)
-			else:
-				pipboy.handle_action(self.right_action)
-				print(self.right_action)
-		self.clkLastState = clkState
+	def rotation_decode(self, Enc_A):
+		time.sleep(0.002)
+		Switch_A = GPIO.input(self.Enc_A)
+		Switch_B = GPIO.input(self.Enc_B)
+
+		if (Switch_A == 1) and (Switch_B == 0):
+			self.pipboy.handle_action(self.left_action)
+			while Switch_B == 0:
+				Switch_B = GPIO.input(self.Enc_B)
+			while Switch_B == 1:
+				Switch_B = GPIO.input(self.Enc_B)
+			return
+
+		elif (Switch_A == 1) and (Switch_B == 1):
+			self.pipboy.handle_action(self.right_action)
+			while Switch_A == 1:
+				Switch_A = GPIO.input(self.Enc_A)
+			return
+		else:
+			return
 
 
 class Pypboy(game.core.Engine):
@@ -76,8 +87,6 @@ class Pypboy(game.core.Engine):
 			self.handle_action("pause")
 			self.last_pause_click = time.time_ns()
 			print("pause")
-		self.dial_vert.handle(self)
-		self.dial_hor.handle(self)
 
 	def update(self):
 		if hasattr(self, 'active'):
