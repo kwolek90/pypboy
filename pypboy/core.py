@@ -79,11 +79,11 @@ class Pypboy(game.core.Engine):
 		GPIO.setmode(GPIO.BCM)
 		self.dial_hor = Dial(5, 6, "dial_left", "dial_right", self)
 		self.dial_vert = Dial(20, 21, "dial_down", "dial_up", self)
-		GPIO.setup(26, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+		GPIO.setup(26, GPIO.IN)
 		self.gpio_actions[26] = "pause"
 
 	def check_gpio_input(self):
-		if time.time_ns() - self.last_pause_click > 500000000 and not GPIO.input(26):
+		if time.time_ns() - self.last_pause_click > 500000000 and GPIO.input(26):
 			self.handle_action("pause")
 			self.last_pause_click = time.time_ns()
 			print("pause")
