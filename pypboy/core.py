@@ -16,8 +16,8 @@ class Dial:
 		self.left_action = left_action
 		self.right_action = right_action
 		self.clkLastState = GPIO.input(self.clk)
-		GPIO.setup(self.clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-		GPIO.setup(self.dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+		GPIO.setup(self.clk, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+		GPIO.setup(self.dt, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 	def handle(self, pipboy):
 		clkState = GPIO.input(self.clk)
