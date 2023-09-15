@@ -7,6 +7,7 @@ from pypboy.modules import data
 
 if config.GPIO_AVAILABLE:
 	import RPi.GPIO as GPIO
+	GPIO.setmode(GPIO.BCM)
 
 
 class Dial:
@@ -16,6 +17,8 @@ class Dial:
 		self.left_action = left_action
 		self.right_action = right_action
 		self.clkLastState = GPIO.input(self.clk)
+
+		GPIO.setmode(GPIO.BCM)
 		GPIO.setup(self.clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 		GPIO.setup(self.dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
@@ -57,6 +60,7 @@ class Pypboy(game.core.Engine):
 		self.switch_module("data")
 
 	def init_gpio_controls(self):
+		GPIO.setmode(GPIO.BCM)
 		self.dial_hor = Dial(5, 6, "dial_left", "dial_right")
 		self.dial_vert = Dial(31, 27, "dial_down", "dial_up")
 		GPIO.setup(26, GPIO.IN, pull_up_down=GPIO.PUD_UP)

@@ -1,14 +1,13 @@
 #!/bin/sh
 
 sudo apt-get update
-sudo apt-get -y install python3 python3-pip python3-pygame vim git python3-numpy python3-pil unclutter
+sudo apt-get -y install python3 python3-pip python3-pygame vim git python3-numpy python3-pil onboard
 git clone https://github.com/goodtft/LCD-show.git
 git clone https://github.com/kwolek90/pypboy.git
 pip install xmltodict requests
 mkdir -p ~/.config/lxsession/LXDE-pi
 cp /etc/xdg/lxsession/LXDE-pi/autostart ~/.config/lxsession/LXDE-pi
 echo "@bash `pwd`/pypboy/launcher.sh" >> ~/.config/lxsession/LXDE-pi/autostart
-echo "@unclutter -idle 0.1 -root" >> ~/.config/lxsession/LXDE-pi/autostart
 cp `pwd`/pypboy/launcher.sh run
 cd LCD-show
 sudo chmod +x LCD35-show
