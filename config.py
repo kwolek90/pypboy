@@ -1,7 +1,7 @@
 import pygame
 import os
 
-VERSION="0.0.1"
+VERSION = "0.0.1"
 
 WIDTH = 480
 HEIGHT = 320
