@@ -79,7 +79,7 @@ class Pypboy(game.core.Engine):
 		GPIO.setmode(GPIO.BCM)
 		self.dial_hor = Dial(5, 6, "dial_left", "dial_right", self)
 		self.dial_vert = Dial(20, 21, "dial_down", "dial_up", self)
-		GPIO.setup(26, GPIO.IN)
+		GPIO.setup(26, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 		self.gpio_actions[26] = "pause"
 
 	def check_gpio_input(self):
