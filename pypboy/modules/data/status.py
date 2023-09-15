@@ -18,6 +18,26 @@ class Module(pypboy.SubModule):
 		health.rect[1] = 40
 		self.add(health)
 
+		self.statuses = []
+		self.statuses.append(Status("Version: " + config.VERSION, "Version: " + config.VERSION))
+		self.selected_status = None
+
+		handlers = []
+		for x in range(len(self.statuses)):
+			handlers.append(lambda x=x: self.select_status(x))
+
+		self.menu = pypboy.menu.Menu(250, [x.name for x in self.statuses], handlers, 0)
+		self.menu.rect[0] = 4
+		self.menu.rect[1] = 50
+
+		self.add(self.menu)
+
+	def select_status(self, status_idx):
+		if self.selected_status:
+			self.selected_status.clear()
+		status = self.statuses[status_idx]
+		self.selected_status = status
+
 	def update(self, *args, **kwargs):
 		super(Module, self).update(*args, **kwargs)
 
@@ -77,3 +97,36 @@ class Health(game.Entity):
 		pass
 
 
+class Status(game.Entity):
+	def __init__(self, name, description, *args, **kwargs):
+		super(Status, self).__init__((config.WIDTH, config.HEIGHT), *args, **kwargs)
+		self.name = name
+		self.text = description
+
+	def render(self, *args, **kwargs):
+		pass
+
+	def update(self, *args, **kwargs):
+		pass
+
+	def print(self, *args, **kwargs):
+		font_size = 8
+		line_length = int((config.WIDTH - 150) / (font_size / 2))
+
+		text = ""
+		line_idx = 0
+		for line in self.text.splitlines():
+			for word in line.split():
+				if len(word) + len(text) > line_length:
+					self.image.blit(config.FONTS[font_size].render(text, True, (105, 255, 187), (0, 0, 0)),
+									(140, 50 + line_idx * font_size))
+					text = ""
+					line_idx += 1
+				text += word + " "
+			self.image.blit(config.FONTS[font_size].render(text, True, (105, 255, 187), (0, 0, 0)),
+							(140, 50 + line_idx * font_size))
+			text = ""
+			line_idx += 1
+
+	def clear(self):
+		self.image.fill((0, 0, 0))
