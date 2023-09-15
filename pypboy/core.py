@@ -16,11 +16,12 @@ class Dial:
 		self.dt = dt
 		self.left_action = left_action
 		self.right_action = right_action
-		self.clkLastState = GPIO.input(self.clk)
 
 		GPIO.setmode(GPIO.BCM)
 		GPIO.setup(self.clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 		GPIO.setup(self.dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
+		self.clkLastState = GPIO.input(self.clk)
 
 	def handle(self, pipboy):
 		clkState = GPIO.input(self.clk)
@@ -41,7 +42,7 @@ class Pypboy(game.core.Engine):
 		super(Pypboy, self).__init__(*args, **kwargs)
 		self.init_children()
 		self.init_modules()
-		
+
 		self.gpio_actions = {}
 		if config.GPIO_AVAILABLE:
 			self.init_gpio_controls()
