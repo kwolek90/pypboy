@@ -9,6 +9,27 @@ if config.GPIO_AVAILABLE:
 	import RPi.GPIO as GPIO
 
 
+class Dial:
+	def __init__(self, clk, dt, left_action, right_action):
+		self.clk = clk
+		self.dt = dt
+		self.left_action = left_action
+		self.right_action = right_action
+		self.clkLastState = GPIO.input(self.clk)
+		GPIO.setup(self.clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+		GPIO.setup(self.dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
+	def handle(self, pipboy):
+		clkState = GPIO.input(self.clk)
+		dtState = GPIO.input(self.dt)
+		if clkState != self.clkLastState:
+			if dtState != clkState:
+				self.pipboy.handle_action(self.left_action)
+			else:
+				self.pipboy.handle_action(self.right_action)
+		self.clkLastState = clkState
+
+
 class Pypboy(game.core.Engine):
 
 	def __init__(self, *args, **kwargs):
@@ -36,15 +57,16 @@ class Pypboy(game.core.Engine):
 		self.switch_module("data")
 
 	def init_gpio_controls(self):
-		for pin in config.GPIO_ACTIONS.keys():
-			print("Intialising pin %s as action '%s'" % (pin, config.GPIO_ACTIONS[pin]))
-			GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-			self.gpio_actions[pin] = config.GPIO_ACTIONS[pin]
+		self.dial_hor = Dial(5, 6, "dial_left", "dial_right")
+		self.dial_vert = Dial(31, 27, "dial_down", "dial_up")
+		GPIO.setup(26, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+		self.gpio_actions[26] = "pause"
 
 	def check_gpio_input(self):
-		for pin in self.gpio_actions.keys():
-			if not GPIO.input(pin):
-				self.handle_action(self.gpio_actions[pin])
+		if not GPIO.input(26):
+			self.handle_action("pause")
+		self.dial_vert.handle(self)
+		self.dial_hor.handle(self)
 
 	def update(self):
 		if hasattr(self, 'active'):
