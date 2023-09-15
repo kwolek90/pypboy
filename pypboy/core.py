@@ -83,7 +83,7 @@ class Pypboy(game.core.Engine):
 		self.gpio_actions[26] = "pause"
 
 	def check_gpio_input(self):
-		if time.time_ns() - self.last_pause_click > 500000000 and GPIO.input(26):
+		if time.time_ns() - self.last_pause_click > 500000000 and not GPIO.input(26):
 			self.handle_action("pause")
 			self.last_pause_click = time.time_ns()
 			print("pause")
