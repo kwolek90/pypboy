@@ -121,7 +121,8 @@ class Pypboy(game.core.Engine):
 				self.handle_event(event)
 			self.update()
 			self.render()
-			self.check_gpio_input()
+			if config.GPIO_AVAILABLE:
+				self.check_gpio_input()
 			pygame.time.wait(10)
 
 		try:

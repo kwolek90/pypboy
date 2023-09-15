@@ -1,7 +1,7 @@
 #!/bin/sh
 
 sudo apt-get update
-sudo apt-get install python3 python3-pip python3-pygame vim git python3-numpy python3-pil
+sudo apt-get -y install python3 python3-pip python3-pygame vim git python3-numpy python3-pil
 git clone https://github.com/goodtft/LCD-show.git
 git clone https://github.com/kwolek90/pypboy.git
 pip install xmltodict requests
