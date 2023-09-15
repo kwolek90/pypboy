@@ -28,9 +28,9 @@ class Dial:
 		dtState = GPIO.input(self.dt)
 		if clkState != self.clkLastState:
 			if dtState != clkState:
-				self.pipboy.handle_action(self.left_action)
+				pipboy.handle_action(self.left_action)
 			else:
-				self.pipboy.handle_action(self.right_action)
+				pipboy.handle_action(self.right_action)
 		self.clkLastState = clkState
 
 
