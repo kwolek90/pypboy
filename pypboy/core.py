@@ -29,8 +29,10 @@ class Dial:
 		if clkState != self.clkLastState:
 			if dtState != clkState:
 				pipboy.handle_action(self.left_action)
+				print(self.left_action)
 			else:
 				pipboy.handle_action(self.right_action)
+				print(self.right_action)
 		self.clkLastState = clkState
 
 
@@ -70,6 +72,7 @@ class Pypboy(game.core.Engine):
 	def check_gpio_input(self):
 		if not GPIO.input(26):
 			self.handle_action("pause")
+			print("pause")
 		self.dial_vert.handle(self)
 		self.dial_hor.handle(self)
 
