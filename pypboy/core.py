@@ -10,6 +10,8 @@ if config.GPIO_AVAILABLE:
 	import RPi.GPIO as GPIO
 	GPIO.setmode(GPIO.BCM)
 
+PAUSE_PIN = 19
+
 
 class Dial:
 	def __init__(self, clk, dt, left_action, right_action, pipboy):
@@ -24,7 +26,7 @@ class Dial:
 		GPIO.setmode(GPIO.BCM)
 		GPIO.setup(self.Enc_A, GPIO.IN)
 		GPIO.setup(self.Enc_B, GPIO.IN)
-		GPIO.add_event_detect(self.Enc_A, GPIO.RISING, callback=self.rotation_decode, bouncetime=10)
+		GPIO.add_event_detect(self.Enc_A, GPIO.RISING, callback=self.rotation_decode, bouncetime=100)
 
 	def rotation_decode(self, Enc_A):
 		time.sleep(0.002)
@@ -52,7 +54,6 @@ class Dial:
 
 
 class Pypboy(game.core.Engine):
-
 	def __init__(self, *args, **kwargs):
 		if hasattr(config, 'OUTPUT_WIDTH') and hasattr(config, 'OUTPUT_HEIGHT'):
 			self.rescale = True
@@ -82,11 +83,11 @@ class Pypboy(game.core.Engine):
 		GPIO.setmode(GPIO.BCM)
 		self.dial_hor = Dial(5, 6, "dial_left", "dial_right", self)
 		self.dial_vert = Dial(20, 21, "dial_down", "dial_up", self)
-		GPIO.setup(26, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-		self.gpio_actions[26] = "pause"
+		GPIO.setup(PAUSE_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+		self.gpio_actions[PAUSE_PIN] = "pause"
 
 	def check_gpio_input(self):
-		if time.time_ns() - self.last_pause_click > 500000000 and not GPIO.input(26):
+		if time.time_ns() - self.last_pause_click > 500000000 and not GPIO.input(PAUSE_PIN):
 			self.handle_action("pause")
 			self.last_pause_click = time.time_ns()
 			print("pause")
