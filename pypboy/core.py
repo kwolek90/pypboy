@@ -33,18 +33,21 @@ class Dial:
 
 		if (Switch_A == 1) and (Switch_B == 0):
 			self.pipboy.handle_action(self.left_action)
-			while Switch_B == 0:
-				Switch_B = GPIO.input(self.Enc_B)
-			while Switch_B == 1:
-				Switch_B = GPIO.input(self.Enc_B)
+			# while Switch_B == 0:
+			# 	Switch_B = GPIO.input(self.Enc_B)
+			# while Switch_B == 1:
+			# 	Switch_B = GPIO.input(self.Enc_B)
+			time.sleep(0.5)
 			return
 
 		elif (Switch_A == 1) and (Switch_B == 1):
 			self.pipboy.handle_action(self.right_action)
-			while Switch_A == 1:
-				Switch_A = GPIO.input(self.Enc_A)
+			# while Switch_A == 1:
+			# 	Switch_A = GPIO.input(self.Enc_A)
+			time.sleep(0.5)
 			return
 		else:
+			time.sleep(0.1)
 			return
 
 
