@@ -13,44 +13,68 @@ if config.GPIO_AVAILABLE:
 PAUSE_PIN = 19
 
 
-class Dial:
-	def __init__(self, clk, dt, left_action, right_action, pipboy):
-		self.Enc_A = clk
-		self.Enc_B = dt
-		self.left_action = left_action
-		self.right_action = right_action
-		self.pipboy = pipboy
+class Encoder:
 
-		GPIO.setmode(GPIO.BCM)
+	def __init__(self, leftPin, rightPin, callback=None):
+		self.leftPin = leftPin
+		self.rightPin = rightPin
+		self.value = 0
+		self.state = '00'
+		self.direction = None
+		self.callback = callback
+		GPIO.setup(self.leftPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+		GPIO.setup(self.rightPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+		GPIO.add_event_detect(self.leftPin, GPIO.BOTH, callback=self.transitionOccurred)
+		GPIO.add_event_detect(self.rightPin, GPIO.BOTH, callback=self.transitionOccurred)
 
-		GPIO.setmode(GPIO.BCM)
-		GPIO.setup(self.Enc_A, GPIO.IN)
-		GPIO.setup(self.Enc_B, GPIO.IN)
-		GPIO.add_event_detect(self.Enc_A, GPIO.RISING, callback=self.rotation_decode, bouncetime=100)
+	def transitionOccurred(self, channel):
+		p1 = GPIO.input(self.leftPin)
+		p2 = GPIO.input(self.rightPin)
+		newState = "{}{}".format(p1, p2)
 
-	def rotation_decode(self, Enc_A):
-		time.sleep(0.002)
-		Switch_A = GPIO.input(self.Enc_A)
-		Switch_B = GPIO.input(self.Enc_B)
+		if self.state == "00":  # Resting position
+			if newState == "01":  # Turned right 1
+				self.direction = "R"
+			elif newState == "10":  # Turned left 1
+				self.direction = "L"
 
-		if (Switch_A == 1) and (Switch_B == 0):
-			self.pipboy.handle_action(self.left_action)
-			# while Switch_B == 0:
-			# 	Switch_B = GPIO.input(self.Enc_B)
-			# while Switch_B == 1:
-			# 	Switch_B = GPIO.input(self.Enc_B)
-			time.sleep(0.5)
-			return
+		elif self.state == "01":  # R1 or L3 position
+			if newState == "11":  # Turned right 1
+				self.direction = "R"
+			elif newState == "00":  # Turned left 1
+				if self.direction == "L":
+					self.value = self.value - 1
+					if self.callback is not None:
+						self.callback(self.value, self.direction)
 
-		elif (Switch_A == 1) and (Switch_B == 1):
-			self.pipboy.handle_action(self.right_action)
-			# while Switch_A == 1:
-			# 	Switch_A = GPIO.input(self.Enc_A)
-			time.sleep(0.5)
-			return
-		else:
-			time.sleep(0.1)
-			return
+		elif self.state == "10":  # R3 or L1
+			if newState == "11":  # Turned left 1
+				self.direction = "L"
+			elif newState == "00":  # Turned right 1
+				if self.direction == "R":
+					self.value = self.value + 1
+					if self.callback is not None:
+						self.callback(self.value, self.direction)
+
+		else:  # self.state == "11"
+			if newState == "01":  # Turned left 1
+				self.direction = "L"
+			elif newState == "10":  # Turned right 1
+				self.direction = "R"
+			elif newState == "00":  # Skipped an intermediate 01 or 10 state, but if we know direction then a turn is complete
+				if self.direction == "L":
+					self.value = self.value - 1
+					if self.callback is not None:
+						self.callback(self.value, self.direction)
+				elif self.direction == "R":
+					self.value = self.value + 1
+					if self.callback is not None:
+						self.callback(self.value, self.direction)
+
+		self.state = newState
+
+	def getValue(self):
+		return self.value
 
 
 class Pypboy(game.core.Engine):
@@ -81,10 +105,22 @@ class Pypboy(game.core.Engine):
 
 	def init_gpio_controls(self):
 		GPIO.setmode(GPIO.BCM)
-		self.dial_hor = Dial(5, 6, "dial_left", "dial_right", self)
-		self.dial_vert = Dial(20, 21, "dial_down", "dial_up", self)
+		Encoder(5, 6, self.encoder_horizontal)
+		Encoder(20, 21, self.move_vertically)
 		GPIO.setup(PAUSE_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 		self.gpio_actions[PAUSE_PIN] = "pause"
+
+	def move_vertically(self, value, direction):
+		if direction == "L":
+			self.handle_action("dial_down")
+		if direction == "R":
+			self.handle_action("dial_up")
+
+	def move_horizontally(self, value, direction):
+		if direction == "L":
+			self.handle_action("dial_left")
+		if direction == "R":
+			self.handle_action("dial_right")
 
 	def check_gpio_input(self):
 		if time.time_ns() - self.last_pause_click > 500000000 and not GPIO.input(PAUSE_PIN):
