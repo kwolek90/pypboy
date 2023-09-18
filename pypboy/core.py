@@ -107,31 +107,27 @@ class Pypboy(game.core.Engine):
 	def init_gpio_controls(self):
 		GPIO.setmode(GPIO.BCM)
 
-		my_encoder = pyky040.Encoder(CLK=5, DT=6, SW=26)
-		my_encoder.setup(scale_min=0, scale_max=100, step=1, inc_callback=self.move_right, dec_callback=self.move_left, sw_callback=self.toogle_music, sw_debounce_time=100)
+		encoder = pyky040.Encoder(CLK=5, DT=6, SW=26)
+		encoder.setup(scale_min=0, scale_max=100, step=1, inc_callback=self.move_right, dec_callback=self.move_left, sw_callback=self.toogle_music, sw_debounce_time=100)
+		encoder.watch()
+		my_encoder = pyky040.Encoder(CLK=20, DT=21, SW=16)
+		my_encoder.setup(scale_min=0, scale_max=100, step=1, inc_callback=self.move_up, dec_callback=self.move_down, sw_callback=self.toogle_music, sw_debounce_time=100)
 		my_encoder.watch()
-		# Encoder(5, 6, self.encoder_horizontal)
-		# Encoder(20, 21, self.move_vertically)
-		# GPIO.setup(PAUSE_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-		# self.gpio_actions[PAUSE_PIN] = "pause"
 
 	def move_left(self):
 		self.handle_action("dial_left")
+
 	def move_right(self):
-		self.handle_action("dial_left")
+		self.handle_action("dial_right")
+
+	def move_up(self):
+		self.handle_action("dial_up")
+
+	def move_down(self):
+		self.handle_action("dial_down")
+
 	def toogle_music(self):
 		self.handle_action("pause")
-	def move_vertically(self, value, direction):
-		if direction == "L":
-			self.handle_action("dial_down")
-		if direction == "R":
-			self.handle_action("dial_up")
-
-	def move_horizontally(self, value, direction):
-		if direction == "L":
-			self.handle_action("dial_left")
-		if direction == "R":
-			self.handle_action("dial_right")
 
 	def check_gpio_input(self):
 		pass
