@@ -15,13 +15,15 @@ class Module(pypboy.SubModule):
 		map_grid = Map(config.WIDTH, pygame.Rect(4, (config.WIDTH - config.HEIGHT) / 2, config.WIDTH - 8, config.HEIGHT - 80))
 
 		# map_grid.fetch_map(config.MAP_FOCUS, 0.003)
-		# self.add(map_grid)
+		self.add(map_grid)
 		# map_grid.rect[0] = 4
 		# map_grid.rect[1] = 40
 
 	def handle_resume(self):
 		self.parent.pypboy.header.headline = "DATA"
 		self.parent.pypboy.header.title = "Local"
+		self.image = pygame.image.load(config.MAP_IMAGE)
+		print(self.image)
 		super(Module, self).handle_resume()
 
 
@@ -40,6 +42,7 @@ class Map(game.Entity):
 		self._map_surface = pygame.Surface((width, width))
 		self._render_rect = render_rect
 		super(Map, self).__init__((width, width), *args, **kwargs)
+		self.image = pygame.transform.scale(pygame.image.load(config.MAP_IMAGE), (config.WIDTH - 8, config.HEIGHT - 8))
 		#text = config.FONTS[14].render("Loading map...", True, (95, 255, 177), (0, 0, 0))
 		#self.image.blit(text, (10, 10))
 
@@ -53,15 +56,17 @@ class Map(game.Entity):
 
 	def update(self, *args, **kwargs):
 		super(Map, self).update(*args, **kwargs)
+	# 	self.image = pygame.image.load(config.MAP_IMAGE)
+	#
+	# def render(self, *args, **kwargs):
+	# 	self.image = pygame.image.load(config.MAP_IMAGE)
 
 	def move_map(self, x, y):
 		self._render_rect.move_ip(x, y)
 
 	def redraw_map(self, coef = 1):
 		self._map_surface.fill((0, 0, 0))
-		imp = pygame.image.load(config.MAP_IMAGE).convert()
-		pygame.transform.scale(imp, (config.WIDTH, config.HEIGHT))
-		self._map_surface.blit(imp)
+		self.image = pygame.image.load(config.MAP_IMAGE)
 		# coef_size = self._size / coef
 		# for way in self._mapper.transpose_ways((coef_size, coef_size), (self._size / 2, self._size / 2)):
 		# 	pygame.draw.lines(
