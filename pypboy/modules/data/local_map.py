@@ -40,8 +40,8 @@ class Map(game.Entity):
 		self._map_surface = pygame.Surface((width, width))
 		self._render_rect = render_rect
 		super(Map, self).__init__((width, width), *args, **kwargs)
-		text = config.FONTS[14].render("Loading map...", True, (95, 255, 177), (0, 0, 0))
-		self.image.blit(text, (10, 10))
+		#text = config.FONTS[14].render("Loading map...", True, (95, 255, 177), (0, 0, 0))
+		#self.image.blit(text, (10, 10))
 
 	def fetch_map(self, position, radius):
 		self._fetching = threading.Thread(target=self._internal_fetch_map, args=(position, radius))
@@ -61,7 +61,7 @@ class Map(game.Entity):
 		self._map_surface.fill((0, 0, 0))
 		imp = pygame.image.load(config.MAP_IMAGE).convert()
 		pygame.transform.scale(imp, (config.WIDTH, config.HEIGHT))
-		self._map_surface.blit(imp, (0,0))
+		self._map_surface.blit(imp)
 		# coef_size = self._size / coef
 		# for way in self._mapper.transpose_ways((coef_size, coef_size), (self._size / 2, self._size / 2)):
 		# 	pygame.draw.lines(
