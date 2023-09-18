@@ -42,6 +42,7 @@ class Map(game.Entity):
 		self._map_surface = pygame.Surface((width, width))
 		self._render_rect = render_rect
 		super(Map, self).__init__((width, width), *args, **kwargs)
+		print(config.MAP_IMAGE)
 		self.image = pygame.transform.scale(pygame.image.load(config.MAP_IMAGE), (config.WIDTH - 8, config.HEIGHT - 8))
 		#text = config.FONTS[14].render("Loading map...", True, (95, 255, 177), (0, 0, 0))
 		#self.image.blit(text, (10, 10))
