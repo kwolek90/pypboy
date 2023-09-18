@@ -20,7 +20,7 @@ class Pypboy(game.core.Engine):
 		self.init_children()
 		self.init_modules()
 		self.last_pause_click = time.time_ns()
-		pygame.mouse.set_cursor((8, 8), (0, 0), (0, 0, 0, 0, 0, 0, 0, 0), (0, 0, 0, 0, 0, 0, 0, 0))
+		#pygame.mouse.set_cursor((8, 8), (0, 0), (0, 0, 0, 0, 0, 0, 0, 0), (0, 0, 0, 0, 0, 0, 0, 0))
 
 		self.gpio_actions = {}
 		if config.GPIO_AVAILABLE:
