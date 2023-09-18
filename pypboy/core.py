@@ -20,7 +20,7 @@ class Pypboy(game.core.Engine):
 		self.init_children()
 		self.init_modules()
 		self.last_pause_click = time.time_ns()
-		#pygame.mouse.set_cursor((8, 8), (0, 0), (0, 0, 0, 0, 0, 0, 0, 0), (0, 0, 0, 0, 0, 0, 0, 0))
+		pygame.mouse.set_cursor((8, 8), (0, 0), (0, 0, 0, 0, 0, 0, 0, 0), (0, 0, 0, 0, 0, 0, 0, 0))
 
 		self.gpio_actions = {}
 		if config.GPIO_AVAILABLE:
@@ -45,9 +45,9 @@ class Pypboy(game.core.Engine):
 		encoder = pyky040.Encoder(CLK=5, DT=6, SW=21)
 		encoder.setup(scale_min=0, scale_max=100, step=1, inc_callback=self.move_right, dec_callback=self.move_left, sw_callback=self.toogle_music, sw_debounce_time=500)
 		encoder.watch()
-		my_encoder = pyky040.Encoder(CLK=26, DT=19, SW=20)
-		my_encoder.setup(scale_min=0, scale_max=100, step=1, inc_callback=self.move_up, dec_callback=self.move_down, sw_callback=self.toogle_music, sw_debounce_time=250)
-		my_encoder.watch()
+		# my_encoder = pyky040.Encoder(CLK=26, DT=19, SW=20)
+		# my_encoder.setup(scale_min=0, scale_max=100, step=1, inc_callback=self.move_up, dec_callback=self.move_down, sw_callback=self.toogle_music, sw_debounce_time=250)
+		# my_encoder.watch()
 
 	def move_left(self):
 		self.handle_action("dial_left")
