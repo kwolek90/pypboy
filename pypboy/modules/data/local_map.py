@@ -13,10 +13,11 @@ class Module(pypboy.SubModule):
 	def __init__(self, *args, **kwargs):
 		super(Module, self).__init__(*args, **kwargs)
 		map_grid = Map(config.WIDTH, pygame.Rect(4, (config.WIDTH - config.HEIGHT) / 2, config.WIDTH - 8, config.HEIGHT - 80))
-		map_grid.fetch_map(config.MAP_FOCUS, 0.003)
-		self.add(map_grid)
-		map_grid.rect[0] = 4
-		map_grid.rect[1] = 40
+
+		# map_grid.fetch_map(config.MAP_FOCUS, 0.003)
+		# self.add(map_grid)
+		# map_grid.rect[0] = 4
+		# map_grid.rect[1] = 40
 
 	def handle_resume(self):
 		self.parent.pypboy.header.headline = "DATA"
@@ -58,25 +59,28 @@ class Map(game.Entity):
 
 	def redraw_map(self, coef = 1):
 		self._map_surface.fill((0, 0, 0))
-		coef_size = self._size / coef
-		for way in self._mapper.transpose_ways((coef_size, coef_size), (self._size / 2, self._size / 2)):
-			pygame.draw.lines(
-				self._map_surface,
-				(85, 251, 167),
-				False,
-				way,
-				2
-			)
-		for tag in self._mapper.transpose_tags((coef_size, coef_size), (self._size / 2, self._size / 2)):
-			if tag[3] in config.AMENITIES:
-				image = config.AMENITIES[tag[3]]
-			else:
-				print("Unknown amenity: %s" % tag[3])
-				image = config.MAP_ICONS['misc']
-			pygame.transform.scale(image, (10, 10))
-			self._map_surface.blit(image, (tag[1], tag[2]))
-			text = config.FONTS[12].render(tag[0], True, (95, 255, 177), (0, 0, 0))
-			self._map_surface.blit(text, (tag[1] + 17, tag[2] + 4))
+		imp = pygame.image.load(config.MAP_IMAGE).convert()
+		pygame.transform.scale(imp, (config.WIDTH, config.HEIGHT))
+		self._map_surface.blit(imp, (0,0))
+		# coef_size = self._size / coef
+		# for way in self._mapper.transpose_ways((coef_size, coef_size), (self._size / 2, self._size / 2)):
+		# 	pygame.draw.lines(
+		# 		self._map_surface,
+		# 		(85, 251, 167),
+		# 		False,
+		# 		way,
+		# 		2
+		# 	)
+		# for tag in self._mapper.transpose_tags((coef_size, coef_size), (self._size / 2, self._size / 2)):
+		# 	if tag[3] in config.AMENITIES:
+		# 		image = config.AMENITIES[tag[3]]
+		# 	else:
+		# 		print("Unknown amenity: %s" % tag[3])
+		# 		image = config.MAP_ICONS['misc']
+		# 	pygame.transform.scale(image, (10, 10))
+		# 	self._map_surface.blit(image, (tag[1], tag[2]))
+		# 	text = config.FONTS[12].render(tag[0], True, (95, 255, 177), (0, 0, 0))
+		# 	self._map_surface.blit(text, (tag[1] + 17, tag[2] + 4))
 
 		self.image.blit(self._map_surface, (0, 0), area=self._render_rect)
 

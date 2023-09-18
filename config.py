@@ -11,6 +11,7 @@ NOTES_DIRECTORY = os.path.expanduser("~") + "/pypboy_data/notes/"
 ICONS_DIRECTORY = os.path.expanduser("~") + "/pypboy_data/icons/"
 
 MAP_FOCUS = (17.28789434494558, 53.52622447868417)
+MAP_IMAGE = os.path.expanduser("~") + "/pypboy_data/map.jpg"
 
 EVENTS = {
 	'SONG_END': pygame.USEREVENT + 1

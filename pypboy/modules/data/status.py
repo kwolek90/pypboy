@@ -20,6 +20,7 @@ class Module(pypboy.SubModule):
 
 		self.statuses = []
 		self.statuses.append(Status("Version: " + config.VERSION, "Version: " + config.VERSION))
+		self.statuses.append(Status("Health: " + config.VERSION, "Version: " + config.VERSION))
 		self.selected_status = None
 
 		handlers = []
