@@ -3,79 +3,13 @@ import config
 import game
 import pypboy.header
 import time
-from pyky040 import pyky040
 
 from pypboy.modules import data
 
 if config.GPIO_AVAILABLE:
+	from pyky040 import pyky040
 	import RPi.GPIO as GPIO
 	GPIO.setmode(GPIO.BCM)
-
-PAUSE_PIN = 19
-
-
-class Encoder:
-
-	def __init__(self, leftPin, rightPin, callback=None):
-		self.leftPin = leftPin
-		self.rightPin = rightPin
-		self.value = 0
-		self.state = '00'
-		self.direction = None
-		self.callback = callback
-		GPIO.setup(self.leftPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-		GPIO.setup(self.rightPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-		GPIO.add_event_detect(self.leftPin, GPIO.BOTH, callback=self.transitionOccurred)
-		GPIO.add_event_detect(self.rightPin, GPIO.BOTH, callback=self.transitionOccurred)
-
-	def transitionOccurred(self, channel):
-		p1 = GPIO.input(self.leftPin)
-		p2 = GPIO.input(self.rightPin)
-		newState = "{}{}".format(p1, p2)
-
-		if self.state == "00":  # Resting position
-			if newState == "01":  # Turned right 1
-				self.direction = "R"
-			elif newState == "10":  # Turned left 1
-				self.direction = "L"
-
-		elif self.state == "01":  # R1 or L3 position
-			if newState == "11":  # Turned right 1
-				self.direction = "R"
-			elif newState == "00":  # Turned left 1
-				if self.direction == "L":
-					self.value = self.value - 1
-					if self.callback is not None:
-						self.callback(self.value, self.direction)
-
-		elif self.state == "10":  # R3 or L1
-			if newState == "11":  # Turned left 1
-				self.direction = "L"
-			elif newState == "00":  # Turned right 1
-				if self.direction == "R":
-					self.value = self.value + 1
-					if self.callback is not None:
-						self.callback(self.value, self.direction)
-
-		else:  # self.state == "11"
-			if newState == "01":  # Turned left 1
-				self.direction = "L"
-			elif newState == "10":  # Turned right 1
-				self.direction = "R"
-			elif newState == "00":  # Skipped an intermediate 01 or 10 state, but if we know direction then a turn is complete
-				if self.direction == "L":
-					self.value = self.value - 1
-					if self.callback is not None:
-						self.callback(self.value, self.direction)
-				elif self.direction == "R":
-					self.value = self.value + 1
-					if self.callback is not None:
-						self.callback(self.value, self.direction)
-
-		self.state = newState
-
-	def getValue(self):
-		return self.value
 
 
 class Pypboy(game.core.Engine):
@@ -107,10 +41,10 @@ class Pypboy(game.core.Engine):
 	def init_gpio_controls(self):
 		GPIO.setmode(GPIO.BCM)
 
-		encoder = pyky040.Encoder(CLK=5, DT=6, SW=26)
+		encoder = pyky040.Encoder(CLK=5, DT=6, SW=0)
 		encoder.setup(scale_min=0, scale_max=100, step=1, inc_callback=self.move_right, dec_callback=self.move_left, sw_callback=self.toogle_music, sw_debounce_time=500)
 		encoder.watch()
-		my_encoder = pyky040.Encoder(CLK=21, DT=20, SW=16)
+		my_encoder = pyky040.Encoder(CLK=26, DT=16, SW=1)
 		my_encoder.setup(scale_min=0, scale_max=100, step=1, inc_callback=self.move_up, dec_callback=self.move_down, sw_callback=self.toogle_music, sw_debounce_time=250)
 		my_encoder.watch()
 
