@@ -42,7 +42,7 @@ class Pypboy(game.core.Engine):
 	def init_gpio_controls(self):
 		GPIO.setmode(GPIO.BCM)
 
-		encoder = pyky040.Encoder(CLK=5, DT=6, SW=0)
+		encoder = pyky040.Encoder(CLK=5, DT=6, SW=16)
 		encoder.setup(scale_min=0, scale_max=100, step=1, inc_callback=self.move_right, dec_callback=self.move_left, sw_callback=self.toogle_music, sw_debounce_time=500)
 		encoder.watch()
 		# my_encoder = pyky040.Encoder(CLK=26, DT=19, SW=20)
