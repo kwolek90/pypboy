@@ -42,12 +42,12 @@ class Pypboy(game.core.Engine):
 	def init_gpio_controls(self):
 		GPIO.setmode(GPIO.BCM)
 
-		encoder = pyky040.Encoder(CLK=5, DT=6, SW=20)
-		encoder.setup(scale_min=0, scale_max=100, step=1, inc_callback=self.move_right, dec_callback=self.move_left, sw_callback=self.toogle_music, sw_debounce_time=500)
-		encoder.watch()
-		my_encoder = pyky040.Encoder(CLK=26, DT=16, SW=21)
-		my_encoder.setup(scale_min=0, scale_max=100, step=1, inc_callback=self.move_up, dec_callback=self.move_down, sw_callback=self.toogle_music, sw_debounce_time=250)
-		my_encoder.watch()
+		# encoder = pyky040.Encoder(CLK=5, DT=6, SW=20)
+		# encoder.setup(scale_min=0, scale_max=100, step=1, inc_callback=self.move_right, dec_callback=self.move_left, sw_callback=self.toogle_music, sw_debounce_time=500)
+		# encoder.watch()
+		# my_encoder = pyky040.Encoder(CLK=26, DT=16, SW=21)
+		# my_encoder.setup(scale_min=0, scale_max=100, step=1, inc_callback=self.move_up, dec_callback=self.move_down, sw_callback=self.toogle_music, sw_debounce_time=250)
+		# my_encoder.watch()
 
 	def move_left(self):
 		self.handle_action("dial_left")
