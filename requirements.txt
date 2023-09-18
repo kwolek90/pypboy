@@ -3,3 +3,4 @@ requests
 xmltodict
 numpy
 Pillow
+pyky040

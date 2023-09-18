@@ -3,6 +3,7 @@ import config
 import game
 import pypboy.header
 import time
+from pyky040 import pyky040
 
 from pypboy.modules import data
 
@@ -105,11 +106,20 @@ class Pypboy(game.core.Engine):
 
 	def init_gpio_controls(self):
 		GPIO.setmode(GPIO.BCM)
-		Encoder(5, 6, self.encoder_horizontal)
-		Encoder(20, 21, self.move_vertically)
-		GPIO.setup(PAUSE_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-		self.gpio_actions[PAUSE_PIN] = "pause"
 
+		my_encoder = pyky040.Encoder(CLK=5, DT=6, SW=26)
+		my_encoder.setup(scale_min=0, scale_max=100, step=1, inc_callback=self.move_right, dec_callback=self.move_left, sw_callback=self.toogle_music, sw_debounce_time=100)
+		# Encoder(5, 6, self.encoder_horizontal)
+		# Encoder(20, 21, self.move_vertically)
+		# GPIO.setup(PAUSE_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+		# self.gpio_actions[PAUSE_PIN] = "pause"
+
+	def move_left(self):
+		self.handle_action("dial_left")
+	def move_right(self):
+		self.handle_action("dial_left")
+	def toogle_music(self):
+		self.handle_action("pause")
 	def move_vertically(self, value, direction):
 		if direction == "L":
 			self.handle_action("dial_down")
@@ -123,10 +133,11 @@ class Pypboy(game.core.Engine):
 			self.handle_action("dial_right")
 
 	def check_gpio_input(self):
-		if time.time_ns() - self.last_pause_click > 500000000 and not GPIO.input(PAUSE_PIN):
-			self.handle_action("pause")
-			self.last_pause_click = time.time_ns()
-			print("pause")
+		pass
+		# if time.time_ns() - self.last_pause_click > 500000000 and not GPIO.input(PAUSE_PIN):
+		# 	self.handle_action("pause")
+		# 	self.last_pause_click = time.time_ns()
+		# 	print("pause")
 
 	def update(self):
 		if hasattr(self, 'active'):
