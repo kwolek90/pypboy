@@ -7,10 +7,10 @@ import time
 from pypboy.modules import data
 
 if config.GPIO_AVAILABLE:
-	from pyky040 import pyky040
 	import RPi.GPIO as GPIO
 	GPIO.setmode(GPIO.BCM)
 
+CLICK_DELAY = 500000000
 
 class Pypboy(game.core.Engine):
 	def __init__(self, *args, **kwargs):
@@ -19,7 +19,7 @@ class Pypboy(game.core.Engine):
 		super(Pypboy, self).__init__(*args, **kwargs)
 		self.init_children()
 		self.init_modules()
-		self.last_pause_click = time.time_ns()
+		self.last_pin_click = {}
 		pygame.mouse.set_cursor((8, 8), (0, 0), (0, 0, 0, 0, 0, 0, 0, 0), (0, 0, 0, 0, 0, 0, 0, 0))
 
 		self.gpio_actions = {}
@@ -42,12 +42,17 @@ class Pypboy(game.core.Engine):
 	def init_gpio_controls(self):
 		GPIO.setmode(GPIO.BCM)
 
-		encoder = pyky040.Encoder(CLK=5, DT=6, SW=16)
-		encoder.setup(scale_min=0, scale_max=100, step=1, inc_callback=self.move_right, dec_callback=self.move_left, sw_callback=self.toogle_music, sw_debounce_time=500)
-		encoder.watch()
-		# my_encoder = pyky040.Encoder(CLK=26, DT=19, SW=20)
-		# my_encoder.setup(scale_min=0, scale_max=100, step=1, inc_callback=self.move_up, dec_callback=self.move_down, sw_callback=self.toogle_music, sw_debounce_time=250)
-		# my_encoder.watch()
+		GPIO.setup(5, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+		GPIO.setup(6, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+		GPIO.setup(26, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+		GPIO.setup(16, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+		self.last_pin_click = {
+			5: time.time_ns(),
+			6: time.time_ns(),
+			16: time.time_ns(),
+			26: time.time_ns()
+		}
 
 	def move_left(self):
 		self.handle_action("dial_left")
@@ -65,7 +70,18 @@ class Pypboy(game.core.Engine):
 		self.handle_action("pause")
 
 	def check_gpio_input(self):
-		pass
+		if time.time_ns() - self.last_pin_click[6] > CLICK_DELAY and not GPIO.input(6):
+			self.move_up()
+			self.last_pin_click[6] = time.time_ns()
+		if time.time_ns() - self.last_pin_click[5] > CLICK_DELAY and not GPIO.input(5):
+			self.move_down()
+			self.last_pin_click[5] = time.time_ns()
+		if time.time_ns() - self.last_pin_click[16] > CLICK_DELAY and not GPIO.input(16):
+			self.move_left()
+			self.last_pin_click[16] = time.time_ns()
+		if time.time_ns() - self.last_pin_click[26] > CLICK_DELAY and not GPIO.input(26):
+			self.move_right()
+			self.last_pin_click[26] = time.time_ns()
 		# if time.time_ns() - self.last_pause_click > 500000000 and not GPIO.input(PAUSE_PIN):
 		# 	self.handle_action("pause")
 		# 	self.last_pause_click = time.time_ns()
