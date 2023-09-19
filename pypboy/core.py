@@ -20,6 +20,7 @@ class Pypboy(game.core.Engine):
 		self.init_children()
 		self.init_modules()
 		self.last_pin_click = {}
+		self.last_pause_click = time.time_ns()
 		pygame.mouse.set_cursor((8, 8), (0, 0), (0, 0, 0, 0, 0, 0, 0, 0), (0, 0, 0, 0, 0, 0, 0, 0))
 
 		self.gpio_actions = {}
@@ -70,22 +71,21 @@ class Pypboy(game.core.Engine):
 		self.handle_action("pause")
 
 	def check_gpio_input(self):
-		if time.time_ns() - self.last_pin_click[6] > CLICK_DELAY and not GPIO.input(6):
+		if time.time_ns() - self.last_pause_click > CLICK_DELAY and not GPIO.input(6) and not GPIO.input(5):
+			self.toogle_music()
+			self.last_pause_click = time.time_ns()
+		elif time.time_ns() - self.last_pin_click[6] > CLICK_DELAY and not GPIO.input(6):
 			self.move_up()
 			self.last_pin_click[6] = time.time_ns()
-		if time.time_ns() - self.last_pin_click[5] > CLICK_DELAY and not GPIO.input(5):
+		elif time.time_ns() - self.last_pin_click[5] > CLICK_DELAY and not GPIO.input(5):
 			self.move_down()
 			self.last_pin_click[5] = time.time_ns()
-		if time.time_ns() - self.last_pin_click[16] > CLICK_DELAY and not GPIO.input(16):
+		elif time.time_ns() - self.last_pin_click[16] > CLICK_DELAY and not GPIO.input(16):
 			self.move_left()
 			self.last_pin_click[16] = time.time_ns()
-		if time.time_ns() - self.last_pin_click[26] > CLICK_DELAY and not GPIO.input(26):
+		elif time.time_ns() - self.last_pin_click[26] > CLICK_DELAY and not GPIO.input(26):
 			self.move_right()
 			self.last_pin_click[26] = time.time_ns()
-		# if time.time_ns() - self.last_pause_click > 500000000 and not GPIO.input(PAUSE_PIN):
-		# 	self.handle_action("pause")
-		# 	self.last_pause_click = time.time_ns()
-		# 	print("pause")
 
 	def update(self):
 		if hasattr(self, 'active'):
