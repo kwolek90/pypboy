@@ -143,6 +143,10 @@ class Spectrogram:
 		pickle.dump(self, open(dump_file, "wb"))
 
 	def get_decibel(self, target_time, freq):
+		if len(self.spectrogram) <= int(freq * self.frequencies_index_ratio):
+			return 0
+		if len(self.spectrogram[int(freq * self.frequencies_index_ratio)]) <= int(target_time * self.time_index_ratio):
+			return 0
 		return self.spectrogram[int(freq * self.frequencies_index_ratio)][int(target_time * self.time_index_ratio)]
 
 
