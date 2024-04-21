@@ -1,7 +1,1 @@
-pygame
-requests
-xmltodict
-numpy
-Pillow
-pyky040
-mutagen
+PyQt5
