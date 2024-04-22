@@ -3,7 +3,6 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import sys
-import math
 
 try:
     import RPi.GPIO as GPIO
@@ -14,48 +13,45 @@ except Exception as e:
     config.GPIO_AVAILABLE = False
 
 
-
 class PipBoy(QMainWindow):
     def __init__(self):
         super().__init__()
         self.size = QSize(config.WIDTH, config.HEIGHT)
         self.setFixedSize(self.size)
         self.setWindowTitle("PypBoy")
-        self.pages = QStackedWidget()
-        self.subPages = QStackedWidget()
 
-        self.bottom_menu = ["Status", "Items", "Map", "Notes", "Radio", "Skills"]
+        self.bottom_menu = ["status", "items", "map", "notes", "radio", "skills"]
         self.left_menu = ["Antidotes", "Poisons", "Antibiotics", "Genetics"]
 
-        self.selected_subMenu = 3
-        self.selected_botMenu = 3
+        header = QHBoxLayout()
+        main = QHBoxLayout()
+        footer = QHBoxLayout()
+        i=20
+        for menu_item in self.bottom_menu:
+            footer.addWidget(self.prepareLabel(menu_item, i, self.size.height()-20, QSize(10 * len(menu_item), 10)))
+            i+=10 * len(menu_item)
 
-        self.preparePage()
+        lmenu = QVBoxLayout()
+        i=0
+        for menu_item in self.left_menu:
+            lmenu.addWidget(self.prepareLabel(menu_item, 20, 40 + i, QSize(10*len(menu_item), 10)))
+            i+=10
+
+        main.addLayout(lmenu)
+
+        vbox = QVBoxLayout()
+        vbox.addLayout(header)
+        vbox.addLayout(main)
+        vbox.addLayout(footer)
+
+        # label = self.prepareLabel()
+        # vbox.addWidget(label)
+
+        label2 = self.prepareGif()
+        vbox.addWidget(label2)
+
+        self.setLayout(vbox)
         self.show()
-
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Q:
-            print("Killing")
-            self.deleteLater()
-        elif event.key() == Qt.Key_Enter:
-            self.proceed()
-        elif event.key() == Qt.Key_Up:
-            self.selected_subMenu = max(0, self.selected_subMenu - 1)
-            self.preparePage()
-            print(self.selected_subMenu)
-        elif event.key() == Qt.Key_Down:
-            self.selected_subMenu = min(len(self.left_menu) - 1, self.selected_subMenu + 1)
-            self.preparePage()
-            print(self.selected_subMenu)
-        elif event.key() == Qt.Key_Right:
-            self.selected_botMenu = min(len(self.bottom_menu) - 1, self.selected_botMenu + 1)
-            self.preparePage()
-            print(self.selected_botMenu)
-        elif event.key() == Qt.Key_Left:
-            self.selected_botMenu = max(0, self.selected_botMenu - 1)
-            self.preparePage()
-            print(self.selected_botMenu)
-        event.accept()
 
     def prepareMainLabel(self):
         label = QLabel("PipBoy 3000", self)
@@ -68,58 +64,12 @@ class PipBoy(QMainWindow):
         label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
         return label
 
-    def prepareLeftMenu(self):
-        i = 0
-        lmenu = QVBoxLayout()
-
-        for menu_item in self.left_menu:
-            lmenu.addWidget(
-                self.prepareLabel(
-                    menu_item,
-                    20,
-                    40 + i,
-                    menu_item == self.left_menu[self.selected_subMenu]))
-            i += 14
-        return lmenu
-
-    def preparePage(self):
-        vbox = QVBoxLayout()
-
-        header = QHBoxLayout()
-        main = QHBoxLayout()
-        footer = QHBoxLayout()
-        i = 20
-        for menu_item in self.bottom_menu:
-            footer.addWidget(self.prepareLabel(menu_item, i, self.size.height() - 20,
-                                               menu_item == self.bottom_menu[self.selected_botMenu]))
-            i += 14 * len(menu_item)
-
-        lmenu = self.prepareLeftMenu()
-
-        main.addLayout(lmenu)
-
-        vbox.addLayout(header)
-        vbox.addLayout(main)
-        vbox.addLayout(footer)
-
-        if not self.selected_botMenu:
-            label2 = self.prepareGif()
-            vbox.addWidget(label2)
-
-        self.setLayout(vbox)
-        self.update()
-
-
-    def prepareLabel(self, text, x_position, y_position, selected=False):
+    def prepareLabel(self, text, x_position, y_position, size):
         label = QLabel(text, self)
         label.move(x_position, y_position)
-        label.resize(QSize(10*len(text), 14))
-        style = "color: green;"
-        if selected:
-            style += "border-width: 1;border-style: solid; border-color:green;"
-            print(text)
-        label.setStyleSheet(style)
-        label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+        label.resize(size)
+        label.setStyleSheet("color: green")
+        label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         return label
 
     def prepareGif(self):
