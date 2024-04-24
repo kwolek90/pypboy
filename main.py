@@ -3,6 +3,7 @@ import sys
 import pygame
 import config
 import os
+import ez_profile
 
 is_raspberry = len(sys.argv) > 1 and sys.argv[1] == "pi"
 

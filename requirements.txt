@@ -5,3 +5,4 @@ numpy
 Pillow
 pyky040
 mutagen
+ez-profile
