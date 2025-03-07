@@ -11,4 +11,6 @@ else
     echo "Offline"
 fi
 
+mkdir -p ~/pypboy_profiles
+
 venv/bin/python -m cProfile -o ~/pypboy_profiles/`date +'%Y%m%d%H%M%S'` main.py
