@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cd /home/karol/pypboy
+cd ~/pypboy
 
 wget -q --spider http://google.com
 
@@ -11,4 +11,4 @@ else
     echo "Offline"
 fi
 
-/usr/bin/python main.py pi
+venv/bin/python main.py --ignore

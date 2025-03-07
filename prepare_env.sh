@@ -1,8 +1,7 @@
 #!/bin/sh
 
 sudo apt-get update
-sudo apt-get -y install python3 python3-pip python3-pygame vim git python3-numpy python3-pil onboard
-git clone https://github.com/goodtft/LCD-show.git
+sudo apt-get -y install python python-pip python-pygame vim git python-numpy python-pil onboard
 git clone https://github.com/kwolek90/pypboy.git
 pip install xmltodict requests
 mkdir -p ~/.config/lxsession/LXDE-pi
@@ -17,6 +16,5 @@ DISABLE_NOTIFICATIONS="notifications=0"
 sudo sed -i -e "s/$ENABLE_NOTIFICATIONS/$DISABLE_NOTIFICATIONS/g" $PANEL_SETTINGS
 
 cp `pwd`/pypboy/launcher.sh run
-cd LCD-show
-sudo chmod +x LCD35-show
-sudo ./LCD35-show
+cd ~/pypboy
+venv/bin/python -m pip install -r requirements.txt

@@ -7,9 +7,9 @@ class Engine(object):
 	EVENTS_UPDATE = pygame.USEREVENT + 1
 	EVENTS_RENDER = pygame.USEREVENT + 2
 
-	def __init__(self, title, width, height, is_raspberry,  *args, **kwargs):
+	def __init__(self, title, width, height, fullscreen,  *args, **kwargs):
 		super(Engine, self).__init__(*args, **kwargs)
-		self.window = pygame.display.set_mode((width, height), pygame.FULLSCREEN if is_raspberry else pygame.RESIZABLE)
+		self.window = pygame.display.set_mode((width, height), pygame.FULLSCREEN if fullscreen else pygame.RESIZABLE)
 		self.screen = pygame.display.get_surface()
 		pygame.display.set_caption(title)
 		pygame.init()

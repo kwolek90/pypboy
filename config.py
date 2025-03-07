@@ -6,6 +6,8 @@ VERSION = "0.0.1"
 WIDTH = 480
 HEIGHT = 320
 
+FULLSCREEN = False
+
 RADIO_DIRECTORY = os.path.expanduser("~") + "/pypboy_data/radio/"
 NOTES_DIRECTORY = os.path.expanduser("~") + "/pypboy_data/notes/"
 ICONS_DIRECTORY = os.path.expanduser("~") + "/pypboy_data/icons/"
