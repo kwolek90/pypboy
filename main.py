@@ -1,5 +1,3 @@
-import ez_profile
-
 import pygame
 import config
 
