@@ -2,7 +2,6 @@
 
 sudo apt-get update
 sudo apt-get -y install python python-pip python-pygame vim git python-numpy python-pil onboard
-git clone https://github.com/kwolek90/pypboy.git
 pip install xmltodict requests
 mkdir -p ~/.config/lxsession/LXDE-pi
 cp /etc/xdg/lxsession/LXDE-pi/autostart ~/.config/lxsession/LXDE-pi
