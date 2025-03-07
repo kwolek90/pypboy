@@ -1,11 +1,12 @@
 import sys
+if sys.argv.__contains__("profile"):
+    import ez_profile
 
 import pygame
 import config
 import os
-import ez_profile
 
-is_raspberry = len(sys.argv) > 1 and sys.argv[1] == "pi"
+is_raspberry = sys.argv.__contains__("pi")
 
 # Init framebuffer/touchscreen environment variables
 if is_raspberry:

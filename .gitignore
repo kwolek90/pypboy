@@ -4,3 +4,4 @@
 .settings
 lib
 .idea/
+/stats.prof
